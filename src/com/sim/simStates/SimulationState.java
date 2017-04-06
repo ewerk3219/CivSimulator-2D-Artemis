@@ -15,7 +15,6 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import com.sim.Simulator;
-import com.sim.subSystems.entity.components.CollisionShape;
 import com.sim.subSystems.world.Area;
 import com.sim.subSystems.world.WorldManager;
 
@@ -38,7 +37,6 @@ public class SimulationState extends BasicGameState {
 
 	private float scale;
 	private WorldManager worldManager;
-	public ArrayList<CollisionShape> renderShapes;
 
 	private Area area;
 
@@ -58,23 +56,17 @@ public class SimulationState extends BasicGameState {
 		renderDeltaY = 0;
 		// Artemis setup
 		initWorldManager();
-		renderShapes = new ArrayList<CollisionShape>();
+		initSimMap();
 		initEntityTest();
 		// -------
-		initSimMap();
 		area = worldManager.getArea();
 		System.out.println("Initialization complete");
 	}
 
 	private void initEntityTest() {
-		Random random = new Random();
-		int c = 50;
 		for (int i = 0; i < 10; i++) {
-			float x = random.nextFloat() * c + 50;
-			float y = random.nextFloat() * c + 50;
-			float vx = random.nextFloat() * c;
-			float vy = random.nextFloat() * c;
-			this.worldManager.addEntity(x, y, vx, vy);
+			// parameters are test numbers! They don't actually do anything
+			this.worldManager.addEntity(1, 1);
 		}
 	}
 
@@ -91,9 +83,11 @@ public class SimulationState extends BasicGameState {
 			throws SlickException {
 		updateDeltasAndCheckKeys(container, game);
 		this.worldManager.process(delta);
-		System.out.println("RenderX: " + this.renderX);
-		System.out.println("RenderY: " + this.renderY);
+		//System.out.println("RenderX: " + this.renderX);
+		//System.out.println("RenderY: " + this.renderY);
 		updateSimTimingAndSleep(delta);
+		System.out.println("Total Entities: " + this.worldManager.getArea()
+				.getLayerContainer().get(0).getTotalEntities());
 	}
 
 	private void updateDeltasAndCheckKeys(GameContainer container,
@@ -130,7 +124,7 @@ public class SimulationState extends BasicGameState {
 		renderGrid(container, g, 100);
 		g.scale(scale, scale);
 		area.render(g);
-		renderEntityShape(g);
+		// renderEntityShape(g);
 		diplaySystemInformation(g, 10, 30);
 	}
 
@@ -142,15 +136,12 @@ public class SimulationState extends BasicGameState {
 		}
 	}
 
-	private void renderEntityShape(Graphics g) {
-		g.setColor(Color.red);
-		for (CollisionShape shape : renderShapes) {
-			g.fill(shape.getShape());
-		}
-		this.renderShapes.clear(); // clear out list of render shapes before
-									// next call
-		g.setColor(Color.white);
-	}
+	/*
+	 * private void renderEntityShape(Graphics g) { g.setColor(Color.red); for
+	 * (CollisionShape shape : renderShapes) { g.fill(shape.getShape()); }
+	 * this.renderShapes.clear(); // clear out list of render shapes before //
+	 * next call g.setColor(Color.white); }
+	 */
 
 	private void updateSimTimingAndSleep(int delta) {
 		currentTime = Sys.getTime();
@@ -207,4 +198,7 @@ public class SimulationState extends BasicGameState {
 		return 0;
 	}
 
+	public WorldManager getWorldManager() {
+		return this.worldManager;
+	}
 }

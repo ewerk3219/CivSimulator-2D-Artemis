@@ -1,8 +1,16 @@
 package com.sim.subSystems.world;
 
+import java.awt.Point;
+import java.util.ArrayList;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
+
+import com.artemis.Entity;
+import com.sim.Simulator;
 import com.sim.simStates.SimulationState;
+import com.sim.subSystems.entity.components.Visible;
 
 public class Layer {
 
@@ -37,13 +45,70 @@ public class Layer {
 				tile.resetTileShapeCoordinates();
 				g.setColor(tile.getTerrainColor());
 				g.fill(tile.getShape());
+				Image entityAppearance = tile.getEntityAppearance();
+				if (entityAppearance != null) {
+					// may need to fix scaling
+					g.drawImage(entityAppearance,
+							gridX * SimulationState.STANDARD_UNIT
+									+ Simulator.simManager.simState.getRenderX(),
+							gridY * SimulationState.STANDARD_UNIT
+									+ Simulator.simManager.simState.getRenderY());
+				}
 			}
 		}
 		g.setColor(Color.white);
 	}
 
+	public void moveEntityTo(Entity e, int x, int y) {
+		Visible visible = e.getComponent(Visible.class);
+		int entityXLocation;
+		int entityYLocation;
+		if (visible == null) {
+			// If the Entity does not have a visible component
+			Point entityLocation = findEntityLocation(e);
+			entityXLocation = entityLocation.x;
+			entityYLocation = entityLocation.y;
+		} else {
+			// If the Entity has a visible component
+			entityXLocation = visible.getX();
+			entityYLocation = visible.getY();
+			visible.setX(x);
+			visible.setY(y);
+		}
+		getTile(entityXLocation, entityYLocation).removeEntity();
+		getTile(x, y).setEntity(e);
+	}
+
 	/*
-	 * Returns a tile frome the grid at the locations x and y
+	 * Finds the Point (x, y) tile that the entity resides. Returns null if not
+	 * found.
+	 */
+	private Point findEntityLocation(Entity e) {
+		for(int x = 0; x < this.grid.length; x++) {
+			for(int y = 0; y < this.grid[0].length; y++) {
+				if(this.grid[x][y].hasEntity(e)) {
+					return new Point(x, y);
+				}
+			}
+		}
+		return null;
+	}
+	
+	public int getTotalEntities() {
+		int sum = 0;
+		for(int x = 0; x < this.grid.length; x++) {
+			for(int y = 0; y < this.grid[0].length; y++) {
+				Tile tile = this.grid[x][y];
+				if(tile.containAnEntity()) {
+					sum += 1;
+				}
+			}
+		}
+		return sum;
+	}
+
+	/*
+	 * Returns a tile from the grid at the locations x and y
 	 */
 	public Tile getTile(int x, int y) {
 		return grid[x][y];

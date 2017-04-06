@@ -15,13 +15,11 @@ public class SimResourceLoader {
 	private String spriteFolderPath = "res/SpriteSheets/";
 
 	public SimResourceLoader() {
-
 		try {
 			terrainTiles = new SpriteSheet(loadImage("minecraftCustomTextures"), 16,
 					16);
-		} catch (SlickException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (SlickException e) {
+			e.printStackTrace();
 		}
 		try {
 			sword = loadImage("sword");

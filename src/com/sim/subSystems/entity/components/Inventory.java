@@ -7,10 +7,12 @@ import com.sim.subSystems.entity.items.Material;
 import com.sim.subSystems.entity.items.Wearable;
 
 public class Inventory {
-	ArrayList<Consumable> consumbles;
-	ArrayList<Material> materials;
-	ArrayList<Wearable> wearables;
-	ArrayList<Wearable> currentlyEquiped;
+	private ArrayList<Consumable> consumbles;
+	private ArrayList<Material> materials;
+	private ArrayList<Wearable> wearables;
+	private ArrayList<Wearable> currentlyEquiped;
+	// need to integrate this
+	private float overallWeight;
 
 	public Inventory() {
 		this.consumbles = new ArrayList<Consumable>();

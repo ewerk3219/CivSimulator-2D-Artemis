@@ -11,6 +11,7 @@ import com.artemis.WorldConfiguration;
 import com.artemis.WorldConfigurationBuilder;
 import com.sim.Simulator;
 import com.sim.subSystems.entity.components.CollisionType;
+import com.sim.subSystems.entity.components.Life;
 import com.sim.subSystems.entity.components.TestMind;
 import com.sim.subSystems.entity.components.Visible;
 import com.sim.subSystems.entity.entitySystems.TestMindAI;
@@ -57,6 +58,7 @@ public class WorldManager {
 		ed.add(new CollisionType(true));
 		ed.add(new Visible(entityXLocation, entityYLocation, true, appearance));
 		ed.add(new TestMind());
+		ed.add(new Life(10));
 
 		// add entities to world
 		layer.getTile(entityXLocation, entityYLocation).setEntity(e);
@@ -87,5 +89,9 @@ public class WorldManager {
 
 	public Entity getEntity(int entityId) {
 		return this.world.getEntity(entityId);
+	}
+	
+	public boolean toggleMindOnOff() {
+		return this.world.getSystem(TestMindAI.class).toggleMindOnOff();
 	}
 }

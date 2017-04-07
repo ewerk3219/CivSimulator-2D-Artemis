@@ -59,7 +59,20 @@ public class Layer {
 		g.setColor(Color.white);
 	}
 
-	public void moveEntityTo(Entity e, int x, int y) {
+	/*
+	 * Moves Entity 'e' to the tile location (x,y) only if the tile at (x,y) is
+	 * not already occupied by an entity and the location is not a solid tile.
+	 * If the designated tile at (x,y) already contains an entity then no
+	 * operation is executed and false is returned indicating nothing was
+	 * changed. If there is no entity at the designated tile at (x,y) then the
+	 * entity will be moved to the new tile and erased from its original tile it
+	 * came from and will return true indicated a successful operation.
+	 */
+	public boolean moveEntityTo(Entity e, int x, int y) {
+		Tile designatedTile = this.getTile(x, y);
+		if (designatedTile.isSolid() || designatedTile.containAnEntity()) {
+			return false;
+		}
 		Visible visible = e.getComponent(Visible.class);
 		int entityXLocation;
 		int entityYLocation;
@@ -77,6 +90,7 @@ public class Layer {
 		}
 		getTile(entityXLocation, entityYLocation).removeEntity();
 		getTile(x, y).setEntity(e);
+		return true;
 	}
 
 	/*
@@ -84,22 +98,22 @@ public class Layer {
 	 * found.
 	 */
 	private Point findEntityLocation(Entity e) {
-		for(int x = 0; x < this.grid.length; x++) {
-			for(int y = 0; y < this.grid[0].length; y++) {
-				if(this.grid[x][y].hasEntity(e)) {
+		for (int x = 0; x < this.grid.length; x++) {
+			for (int y = 0; y < this.grid[0].length; y++) {
+				if (this.grid[x][y].hasEntity(e)) {
 					return new Point(x, y);
 				}
 			}
 		}
 		return null;
 	}
-	
+
 	public int getTotalEntities() {
 		int sum = 0;
-		for(int x = 0; x < this.grid.length; x++) {
-			for(int y = 0; y < this.grid[0].length; y++) {
+		for (int x = 0; x < this.grid.length; x++) {
+			for (int y = 0; y < this.grid[0].length; y++) {
 				Tile tile = this.grid[x][y];
-				if(tile.containAnEntity()) {
+				if (tile.containAnEntity()) {
 					sum += 1;
 				}
 			}

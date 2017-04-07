@@ -64,7 +64,7 @@ public class SimulationState extends BasicGameState {
 	}
 
 	private void initEntityTest() {
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 1; i++) {
 			// parameters are test numbers! They don't actually do anything
 			this.worldManager.addEntity(1, 1);
 		}
@@ -83,11 +83,15 @@ public class SimulationState extends BasicGameState {
 			throws SlickException {
 		updateDeltasAndCheckKeys(container, game);
 		this.worldManager.process(delta);
-		//System.out.println("RenderX: " + this.renderX);
-		//System.out.println("RenderY: " + this.renderY);
 		updateSimTimingAndSleep(delta);
-		System.out.println("Total Entities: " + this.worldManager.getArea()
-				.getLayerContainer().get(0).getTotalEntities());
+		debugInfo();
+	}
+
+	private void debugInfo() {
+		// System.out.println("RenderX: " + this.renderX);
+		// System.out.println("RenderY: " + this.renderY);
+		// System.out.println("Total Entities: " + this.worldManager.getArea()
+		// .getLayerContainer().get(0).getTotalEntities());
 	}
 
 	private void updateDeltasAndCheckKeys(GameContainer container,
@@ -177,6 +181,9 @@ public class SimulationState extends BasicGameState {
 		}
 		if (container.getInput().isKeyDown(Keyboard.KEY_RIGHT)) {
 			this.renderX += cameraMoveSpeed;
+		}
+		if (container.getInput().isKeyPressed(Keyboard.KEY_M)) {
+			System.out.println("Test Mind AI set to: " + this.worldManager.toggleMindOnOff());
 		}
 	}
 

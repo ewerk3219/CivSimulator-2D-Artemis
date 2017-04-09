@@ -10,10 +10,13 @@ import com.artemis.World;
 import com.artemis.WorldConfiguration;
 import com.artemis.WorldConfigurationBuilder;
 import com.sim.Simulator;
+import com.sim.subSystems.entity.components.CharacterSheet;
 import com.sim.subSystems.entity.components.CollisionType;
+import com.sim.subSystems.entity.components.CombatState;
 import com.sim.subSystems.entity.components.Life;
 import com.sim.subSystems.entity.components.TestMind;
 import com.sim.subSystems.entity.components.Visible;
+import com.sim.subSystems.entity.entitySystems.Combat;
 import com.sim.subSystems.entity.entitySystems.TestMindAI;
 import com.sim.subSystems.world.worldParser.TextFileWorldParser;
 
@@ -30,7 +33,7 @@ public class WorldManager {
 
 	public WorldManager() {
 		WorldConfiguration config = new WorldConfigurationBuilder()
-				.with(new TestMindAI()).build();
+				.with(new TestMindAI(), new Combat()).build();
 		world = new World(config);
 	}
 
@@ -43,14 +46,14 @@ public class WorldManager {
 		Entity e = world.createEntity();
 		EntityEdit ed = world.edit(e.getId());
 		Random random = new Random();
-		Layer layer = area.getLayerContainer().get(0);
+		Layer layer = area.getCurrentLayer();
 		int entityXLocation = random.nextInt(layer.getLayerGrid().length);
 		int entityYLocation = random.nextInt(layer.getLayerGrid()[0].length);
 		while (layer.getTile(entityXLocation, entityYLocation).isSolid()) {
 			entityXLocation = random.nextInt(layer.getLayerGrid().length);
 			entityYLocation = random.nextInt(layer.getLayerGrid()[0].length);
 		}
-		int spriteX = 28;
+		int spriteX = 29;
 		int spriteY = 1;
 		checkForNullPointers(spriteX, spriteY);
 		Image appearance = Simulator.simManager.map.resourceLoader.getSprites()
@@ -59,6 +62,8 @@ public class WorldManager {
 		ed.add(new Visible(entityXLocation, entityYLocation, true, appearance));
 		ed.add(new TestMind());
 		ed.add(new Life(10));
+		ed.add(new CombatState());
+		ed.add(new CharacterSheet(10, 10, 10, 10, 10, 10, 5, 10));
 
 		// add entities to world
 		layer.getTile(entityXLocation, entityYLocation).setEntity(e);

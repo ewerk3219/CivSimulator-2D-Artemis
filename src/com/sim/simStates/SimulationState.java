@@ -64,7 +64,7 @@ public class SimulationState extends BasicGameState {
 	}
 
 	private void initEntityTest() {
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 250; i++) {
 			// parameters are test numbers! They don't actually do anything
 			this.worldManager.addEntity(1, 1);
 		}
@@ -183,7 +183,8 @@ public class SimulationState extends BasicGameState {
 			this.renderX += cameraMoveSpeed;
 		}
 		if (container.getInput().isKeyPressed(Keyboard.KEY_M)) {
-			System.out.println("Test Mind AI set to: " + this.worldManager.toggleMindOnOff());
+			System.out.println(
+					"Test Mind AI set to: " + this.worldManager.toggleMindOnOff());
 		}
 	}
 

@@ -87,6 +87,10 @@ public class Area {
 		}
 	}
 
+	public Layer getCurrentLayer() {
+		return this.getLayerContainer().get(currentLayer);
+	}
+
 	/*
 	 * Returns a list of tile shapes who's tile was solid. Used for rendering in
 	 * debug.

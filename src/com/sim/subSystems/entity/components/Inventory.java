@@ -10,7 +10,7 @@ public class Inventory {
 	private ArrayList<Consumable> consumbles;
 	private ArrayList<Material> materials;
 	private ArrayList<Wearable> wearables;
-	private ArrayList<Wearable> currentlyEquiped;
+	private ArrayList<Wearable> currentlyEquipped;
 	// need to integrate this
 	private float overallWeight;
 
@@ -18,7 +18,7 @@ public class Inventory {
 		this.consumbles = new ArrayList<Consumable>();
 		this.materials = new ArrayList<Material>();
 		this.wearables = new ArrayList<Wearable>();
-		this.currentlyEquiped = new ArrayList<Wearable>();
+		this.currentlyEquipped = new ArrayList<Wearable>();
 
 	}
 
@@ -28,7 +28,7 @@ public class Inventory {
 		this.consumbles = consumbles;
 		this.materials = materials;
 		this.wearables = wearables;
-		this.currentlyEquiped = currentlyEquiped;
+		this.currentlyEquipped = currentlyEquiped;
 	}
 
 	public ArrayList<Consumable> getConsumbles() {
@@ -56,10 +56,10 @@ public class Inventory {
 	}
 
 	public ArrayList<Wearable> getCurrentlyEquiped() {
-		return currentlyEquiped;
+		return currentlyEquipped;
 	}
 
 	public void setCurrentlyEquiped(ArrayList<Wearable> currentlyEquiped) {
-		this.currentlyEquiped = currentlyEquiped;
+		this.currentlyEquipped = currentlyEquiped;
 	}
 }

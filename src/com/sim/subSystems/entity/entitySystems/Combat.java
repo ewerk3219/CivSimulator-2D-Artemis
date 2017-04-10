@@ -49,11 +49,18 @@ public class Combat extends IteratingSystem {
 			// do damage to other entity.
 			Life defenderLife = defenderTile.getEntity().getComponent(Life.class);
 			defenderLife.dealDamage(damageToOther);
+			System.out.println("Defender Health Damage on hit = " + damageToOther);
+			System.out.println(
+					"Defender Damage Taken = " + defenderLife.getDamageTaken());
+			System.out.println("Defender Health = " + defenderLife.getHealth());
 
 			// check if dead
-			if (defenderLife.getDamageTaken() >= defenderLife.getMaxHealth()) {
+			if (defenderLife.isDead()) {
 				entityDefender.deleteFromWorld();
 				Visible defenderVisible = entityDefender.getComponent(Visible.class);
+
+				// Important to remove entity from game world as well, otherwise
+				// fatal error will occur
 				currentLayer.getTile(defenderVisible.getX(), defenderVisible.getY())
 						.removeEntity();
 				System.out.println("Death");
@@ -73,7 +80,7 @@ public class Combat extends IteratingSystem {
 			int damage = Simulator.diceRoller.roll4() + csAttacker.getStrengthMod();
 			if (attackerToHit == CRITICAL_HIT) {
 				damage *= 2;
-				// System.out.println("Critical!");
+				System.out.println("Critical!");
 			}
 			return damage;
 		} else

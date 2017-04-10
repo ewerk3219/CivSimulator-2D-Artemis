@@ -64,7 +64,7 @@ public class SimulationState extends BasicGameState {
 	}
 
 	private void initEntityTest() {
-		for (int i = 0; i < 250; i++) {
+		for (int i = 0; i < 100; i++) {
 			// parameters are test numbers! They don't actually do anything
 			this.worldManager.addEntity(1, 1);
 		}

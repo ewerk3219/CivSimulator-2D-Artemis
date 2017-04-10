@@ -6,7 +6,7 @@ public class Life extends Component {
 
 	private int maxHealth;
 	private int damageTaken;
-	
+
 	public Life() {
 		super();
 	}
@@ -52,7 +52,7 @@ public class Life extends Component {
 	}
 
 	public boolean dealDamage(int deltaDamageTaken) {
-		this.damageTaken += damageTaken;
+		this.damageTaken += deltaDamageTaken;
 		return this.isDead();
 	}
 

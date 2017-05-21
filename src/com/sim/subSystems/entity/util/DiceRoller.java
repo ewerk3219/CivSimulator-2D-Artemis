@@ -6,6 +6,14 @@ public class DiceRoller {
 
 	private Random random = new Random();
 
+	public int roll(int count, int magnitude) {
+		int sum = 0;
+		for (int i = 0; i < count; i++) {
+			sum += random.nextInt(magnitude) + 1;
+		}
+		return sum;
+	}
+
 	public int roll100() {
 		return random.nextInt(100) + 1;
 	}

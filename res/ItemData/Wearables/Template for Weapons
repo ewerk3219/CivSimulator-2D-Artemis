@@ -1,0 +1,26 @@
+#
+name LightMace
+dmg:Small 1d4
+dmg:Medium 1d6
+dmg:Large 1d8
+crit 2
+dmgtype bludgeoning
+range 1
+slot weaponslot
+amount_of_slots 1
+weight_size:Small 2
+weight_size:Medium 4
+weight_size:Large 5
+#
+name LongBow
+dmg:Small 1d4
+dmg:Medium 1d6
+dmg:Large 2d6
+crit 3
+dmgtype piercing
+range 10
+slot weaponslot
+amount_of_slots 2
+weight_size:Small 2
+weight_size:Medium 4
+weight_size:Large 8

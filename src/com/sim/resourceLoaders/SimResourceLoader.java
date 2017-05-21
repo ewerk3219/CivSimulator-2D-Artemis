@@ -1,4 +1,4 @@
-package com.sim;
+package com.sim.resourceLoaders;
 
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;

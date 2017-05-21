@@ -1,4 +1,4 @@
-package com.sim.subSystems.entity.items;
+package com.sim.itemData;
 
 public interface Item {
 

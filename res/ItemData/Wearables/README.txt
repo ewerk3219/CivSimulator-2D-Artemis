@@ -1,0 +1,1 @@
+// Range: 1 is equivalent to 1 tile. So a range of 10 is a range of 10 tiles away.

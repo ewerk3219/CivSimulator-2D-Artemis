@@ -1,0 +1,84 @@
+#
+name FullPlate
+materialTypeAllowed mineral
+armorclass 8
+weight_size_small 25
+weight_size_medium 50
+weight_size_large 100
+#
+name HalfPlate
+materialTypeAllowed mineral
+armorclass 7
+weight_size_small 25
+weight_size_medium 50
+weight_size_large 100
+#
+name BandedMail
+materialTypeAllowed mineral
+armorclass 6
+weight_size_small 17.5
+weight_size_medium 35
+weight_size_large 70
+#
+name SplintMail
+materialTypeAllowed mineral
+armorclass 6
+weight_size_small 22.5
+weight_size_medium 45
+weight_size_large 90
+#
+name Breastplate
+materialTypeAllowed mineral
+armorclass 5
+weight_size_small 15
+weight_size_medium 30
+weight_size_large 60
+#
+name ChainMail
+materialTypeAllowed mineral
+armorclass 5
+weight_size_small 20
+weight_size_medium 40
+weight_size_large 80
+#
+name ScaleMail
+materialTypeAllowed mineral
+armorclass 4
+weight_size_small 15
+weight_size_medium 30
+weight_size_large 60
+#
+name Hide
+materialTypeAllowed organic
+armorclass 3
+weight_size_small 12.5
+weight_size_medium 25
+weight_size_large 50
+#
+name ChainShirt
+materialTypeAllowed mineral
+armorclass 4
+weight_size_small 12.5
+weight_size_medium 25
+weight_size_large 50
+#
+name StuddedLeather
+materialTypeAllowed organic
+armorclass 3
+weight_size_small 10
+weight_size_medium 20
+weight_size_large 40
+#
+name Leather
+materialTypeAllowed organic
+armorclass 2
+weight_size_small 7.5
+weight_size_medium 15
+weight_size_large 30
+#
+name Padded
+materialTypeAllowed organic
+armorclass 1
+weight_size_small 5
+weight_size_medium 10
+weight_size_large 20

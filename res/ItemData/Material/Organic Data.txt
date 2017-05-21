@@ -1,0 +1,6 @@
+#
+name Oak
+strength 4
+conductivity 0
+weight 0.5
+healthmod 4

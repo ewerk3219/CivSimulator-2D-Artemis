@@ -1,0 +1,2 @@
+// Important! Weight numbers should be around 1, if the weight is to be the standard (iron) then set it to 1.
+// By making the number slightly larger or smaller, there will be a [(1 - x) * 100] % increase in weight.

@@ -18,17 +18,20 @@ import com.sim.subSystems.entity.components.TestMind;
 import com.sim.subSystems.entity.components.Visible;
 import com.sim.subSystems.entity.entitySystems.Combat;
 import com.sim.subSystems.entity.entitySystems.TestMindAI;
+import com.sim.subSystems.world.generators.GrassField;
 import com.sim.subSystems.world.worldParser.TextFileWorldParser;
 
 public class WorldManager {
 
 	private World world;
 	private Area area;
+	private GrassField grassFieldGenerator;
 
 	public WorldManager(String path) {
 		this();
 		area = new Area();
 		area.addLayer(TextFileWorldParser.parseLayer(path));
+		grassFieldGenerator = new GrassField();
 	}
 
 	public WorldManager() {
@@ -95,8 +98,16 @@ public class WorldManager {
 	public Entity getEntity(int entityId) {
 		return this.world.getEntity(entityId);
 	}
-	
+
 	public boolean toggleMindOnOff() {
 		return this.world.getSystem(TestMindAI.class).toggleMindOnOff();
+	}
+
+	public void generateNewLayer() {
+		this.area.addLayer(this.grassFieldGenerator.generateGrassField(100, 100));
+	}
+
+	public void setCurrentLayer(int layer) {
+		this.area.setCurrentLayer(layer);
 	}
 }

@@ -38,8 +38,6 @@ public class SimulationState extends BasicGameState {
 	private float scale;
 	private WorldManager worldManager;
 
-	private Area area;
-
 	public ArrayList<Shape> getGrid() {
 		return worldManager.getArea().getSolidShapes();
 	}
@@ -57,9 +55,8 @@ public class SimulationState extends BasicGameState {
 		// Artemis setup
 		initWorldManager();
 		initSimMap();
-		initEntityTest();
+		// initEntityTest();
 		// -------
-		area = worldManager.getArea();
 		System.out.println("Initialization complete");
 	}
 
@@ -72,6 +69,8 @@ public class SimulationState extends BasicGameState {
 
 	private void initWorldManager() {
 		this.worldManager = new WorldManager("testMap");
+		this.worldManager.generateNewLayer();
+		this.worldManager.setCurrentLayer(1);
 	}
 
 	private void initSimMap() {
@@ -92,6 +91,8 @@ public class SimulationState extends BasicGameState {
 		// System.out.println("RenderY: " + this.renderY);
 		// System.out.println("Total Entities: " + this.worldManager.getArea()
 		// .getLayerContainer().get(0).getTotalEntities());
+		// System.out.println("screen width: " + container.getScreenWidth() + ",
+		// width: " + container.getWidth());
 	}
 
 	private void updateDeltasAndCheckKeys(GameContainer container,
@@ -123,11 +124,10 @@ public class SimulationState extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
 		g.setBackground(new Color(0, 0, 0)); // clear background
-		g.setClip(new Rectangle(0, 0, container.getScreenWidth(),
-				container.getScreenHeight()));
+		g.setClip(new Rectangle(0, 0, container.getWidth(), container.getHeight()));
 		renderGrid(container, g, 100);
 		g.scale(scale, scale);
-		area.render(g);
+		this.worldManager.getArea().render(g);
 		// renderEntityShape(g);
 		diplaySystemInformation(g, 10, 30);
 	}
@@ -185,6 +185,12 @@ public class SimulationState extends BasicGameState {
 		if (container.getInput().isKeyPressed(Keyboard.KEY_M)) {
 			System.out.println(
 					"Test Mind AI set to: " + this.worldManager.toggleMindOnOff());
+		}
+		if (container.getInput().isKeyPressed(Keyboard.KEY_EQUALS)) {
+			this.scale -= 0.2f;
+		}
+		if (container.getInput().isKeyPressed(Keyboard.KEY_MINUS)) {
+			this.scale += 0.2f;
 		}
 	}
 

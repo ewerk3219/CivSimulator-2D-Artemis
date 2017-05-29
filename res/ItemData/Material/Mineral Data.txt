@@ -1,24 +1,24 @@
 #
-name iron
-strength 6
-conductivity 7
-weight 1
-healthmod 5
+Iron
+6
+7
+1
+5
 #
-name silver
-strength 5
-conductivity 7
-weight 1.1
-healthmod 3
+Silver
+5
+7
+1.1
+3
 #
-name gold
-strength 2
-conductivity 10
-weight 1.2
-healthmod 2
+Gold
+2
+10
+1.2
+2
 #
-name steel
-strength 8
-conductivity 7
-weight 0.9
-healthmod 7
+Steel
+8
+7
+0.9
+7

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 
@@ -12,6 +13,7 @@ import com.artemis.Entity;
 import com.sim.Simulator;
 import com.sim.simStates.SimulationState;
 import com.sim.subSystems.entity.components.Visible;
+import com.sim.itemData.material.MaterialName;
 
 public class Tile {
 
@@ -22,6 +24,11 @@ public class Tile {
 
 	// For Entity tracking
 	private Entity currentEntity;
+
+	// Material and Environmental conditions and other world generator
+	// information
+	private MaterialName material;
+	private double height;
 
 	public Tile(int x, int y, boolean isSolid, Color terrainColor) {
 		this.x = x;
@@ -38,6 +45,10 @@ public class Tile {
 				Simulator.simManager.simState.getRenderX() + x * standardUnit,
 				Simulator.simManager.simState.getRenderY() + y * standardUnit,
 				standardUnit, standardUnit);
+		// this.shape = new Circle(
+		// Simulator.simManager.simState.getRenderX() + x * standardUnit,
+		// Simulator.simManager.simState.getRenderY() + y * standardUnit,
+		// standardUnit / 2);
 	}
 
 	public int getX() {
@@ -118,5 +129,21 @@ public class Tile {
 			}
 		}
 		return null;
+	}
+
+	public MaterialName getMaterial() {
+		return material;
+	}
+
+	public void setMaterial(MaterialName material) {
+		this.material = material;
+	}
+
+	public double getHeight() {
+		return height;
+	}
+
+	public void setHeight(double height) {
+		this.height = height;
 	}
 }

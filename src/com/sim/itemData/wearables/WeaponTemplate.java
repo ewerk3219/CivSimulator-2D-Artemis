@@ -3,7 +3,7 @@ package com.sim.itemData.wearables;
 import com.sim.itemData.Item;
 import com.sim.itemData.ItemType;
 
-public class Weapon implements Item {
+public class WeaponTemplate implements Item {
 
 	private ItemType itemType = ItemType.Weapon;
 

@@ -26,5 +26,10 @@ public enum MaterialName {
 	Bamboo,
 	Straw,
 	Carapace,
-	Bone
+	Bone,
+	
+	// More Environmental types
+	Grass,
+	Water,
+	Acid
 }

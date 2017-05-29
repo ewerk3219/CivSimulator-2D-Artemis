@@ -1,6 +1,6 @@
 #
-name diamond
-strength 10
-conductivity 0
-weight 1.2
-healthmod 10
+Diamond
+10
+0
+1.2
+10

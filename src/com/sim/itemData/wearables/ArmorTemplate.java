@@ -2,12 +2,11 @@ package com.sim.itemData.wearables;
 
 import com.sim.itemData.Item;
 import com.sim.itemData.ItemType;
-import com.sim.itemData.material.MaterialType;
 
-public class Armor implements Item {
+public class ArmorTemplate implements Item {
 	private ItemType itemType = ItemType.Armor;
 	private ArmorName name;
-	private MaterialType materialTypeAllowed;
+	private ItemType materialTypeAllowed;
 	private Size size;
 	private int armorClass;
 	private float weight;
@@ -34,11 +33,16 @@ public class Armor implements Item {
 		this.name = name;
 	}
 
-	public MaterialType getMaterialTypeAllowed() {
+	public ItemType getMaterialTypeAllowed() {
 		return materialTypeAllowed;
 	}
 
-	public void setMaterialTypeAllowed(MaterialType materialTypeAllowed) {
+	public void setMaterialTypeAllowed(ItemType materialTypeAllowed) {
+		if (materialTypeAllowed == ItemType.Armor
+				|| materialTypeAllowed == ItemType.Weapon) {
+			throw new IllegalArgumentException(
+					"Bad materialTypeAllowd variable: " + materialTypeAllowed);
+		}
 		this.materialTypeAllowed = materialTypeAllowed;
 	}
 

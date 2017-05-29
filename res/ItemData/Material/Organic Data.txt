@@ -1,6 +1,12 @@
 #
-name Oak
-strength 4
-conductivity 0
-weight 0.5
-healthmod 4
+Wood
+4
+1
+0.5
+4
+#
+Bamboo
+3
+1
+0.3
+3

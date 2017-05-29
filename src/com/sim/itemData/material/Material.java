@@ -8,6 +8,33 @@ public class Material implements Item {
 	private float weight;
 	private ItemType itemType;
 	private MaterialName name;
+	private float strength;
+	private float conductivity;
+	private float healthMod;
+
+	public float getStrength() {
+		return strength;
+	}
+
+	public void setStrength(float strength) {
+		this.strength = strength;
+	}
+
+	public float getConductivity() {
+		return conductivity;
+	}
+
+	public void setConductivity(float conductivity) {
+		this.conductivity = conductivity;
+	}
+
+	public float getHealthMod() {
+		return healthMod;
+	}
+
+	public void setHealthMod(float healthMod) {
+		this.healthMod = healthMod;
+	}
 
 	public void setWeight(float weight) {
 		this.weight = weight;

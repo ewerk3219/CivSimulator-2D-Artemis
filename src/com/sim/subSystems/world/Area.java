@@ -108,4 +108,8 @@ public class Area {
 		}
 		return tiles;
 	}
+
+	public void setCurrentLayer(int layer) {
+		this.currentLayer = layer;
+	}
 }

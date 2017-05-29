@@ -29,8 +29,10 @@ public class Layer {
 		int standardUnit = SimulationState.STANDARD_UNIT;
 		for (int x = 0; x < grid.length; x++) {
 			for (int y = 0; y < grid[0].length; y++) {
-				grid[x][y] = new Tile(x * standardUnit, y * standardUnit, false,
-						Color.gray);
+				// grid[x][y] = new Tile(x * standardUnit, y * standardUnit,
+				// false,
+				// Color.gray);
+				grid[x][y] = new Tile(x, y, false, Color.magenta);
 			}
 		}
 	}
@@ -160,14 +162,14 @@ public class Layer {
 	}
 
 	/*
-	 * Returns a tile from the grid at the locations x and y This will not error
-	 * catch on purpose.
+	 * Returns a tile from the grid at the locations x and y. If the location is
+	 * out of the array boundaries, then null will be returned.
 	 */
 	public Tile getTile(int x, int y) {
-		// if(x >= this.grid.length || x < 0 || y >= this.grid[0].length || y <
-		// 0) {
-		// } else
-		return grid[x][y];
+		if (x >= this.grid.length || x < 0 || y >= this.grid[0].length || y < 0) {
+			return null;
+		} else
+			return grid[x][y];
 	}
 
 	public Tile[][] getLayerGrid() {

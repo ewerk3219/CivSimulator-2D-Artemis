@@ -5,14 +5,14 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import com.sim.itemData.ItemType;
 import com.sim.itemData.material.Material;
 import com.sim.itemData.material.MaterialName;
-import com.sim.itemData.material.MaterialType;
-import com.sim.itemData.wearables.Armor;
+import com.sim.itemData.wearables.ArmorTemplate;
 import com.sim.itemData.wearables.ArmorName;
 import com.sim.itemData.wearables.DmgType;
 import com.sim.itemData.wearables.Size;
-import com.sim.itemData.wearables.Weapon;
+import com.sim.itemData.wearables.WeaponTemplate;
 import com.sim.itemData.wearables.WeaponName;
 import com.sim.itemData.wearables.WearableSlot;
 
@@ -20,15 +20,15 @@ public class ItemDataLoader {
 	public static final int TOTAL_NUM_OF_SIZES = 3;
 	private HashMap<MaterialName, Material> itemTemplateDataMaterial;
 
-	private HashMap<Size, HashMap<ArmorName, Armor>> itemTemplateDataArmor;
-	private HashMap<Size, HashMap<WeaponName, Weapon>> itemTemplateDataWeapon;
+	private HashMap<Size, HashMap<ArmorName, ArmorTemplate>> itemTemplateDataArmor;
+	private HashMap<Size, HashMap<WeaponName, WeaponTemplate>> itemTemplateDataWeapon;
 
 	public static final String itemDataPath = "res/ItemData/";
 
 	public ItemDataLoader() {
 		this.itemTemplateDataMaterial = new HashMap<MaterialName, Material>();
-		this.itemTemplateDataArmor = new HashMap<Size, HashMap<ArmorName, Armor>>();
-		this.itemTemplateDataWeapon = new HashMap<Size, HashMap<WeaponName, Weapon>>();
+		this.itemTemplateDataArmor = new HashMap<Size, HashMap<ArmorName, ArmorTemplate>>();
+		this.itemTemplateDataWeapon = new HashMap<Size, HashMap<WeaponName, WeaponTemplate>>();
 
 		collectMaterialData();
 		collectArmorData();
@@ -36,21 +36,57 @@ public class ItemDataLoader {
 	}
 
 	private void collectMaterialData() {
-		File crystalData = new File(itemDataPath + "Material/Crystal Data.txt");
+		collectSpecificMaterialTypeData("Material/Crystal Data.txt", ItemType.Crystal);
+		collectSpecificMaterialTypeData("Material/Mineral Data.txt", ItemType.Mineral);
+		collectSpecificMaterialTypeData("Material/Organic Data.txt", ItemType.Organic);
+	}
+
+	private void collectSpecificMaterialTypeData(String path, ItemType iType) {
+		File mData = new File(itemDataPath + path);
+
+		Scanner materialScanner = null;
 		try {
-			Scanner crystalScanner = new Scanner(crystalData);
+			materialScanner = new Scanner(mData);
 		} catch (FileNotFoundException e) {
 			System.out.println("Crystal Data not found");
 			e.printStackTrace();
 		}
 
-		// ... more here
+		while (materialScanner.hasNextLine()) {
+			// Skip over #
+			materialScanner.nextLine();
+
+			Material material = new Material();
+			MaterialName name = MaterialName.valueOf(materialScanner.nextLine());
+			float strength = materialScanner.nextFloat();
+			materialScanner.nextLine();
+			float conductivity = materialScanner.nextFloat();
+			materialScanner.nextLine();
+			float weightPerUnit = materialScanner.nextFloat();
+			materialScanner.nextLine();
+			float healthMod = materialScanner.nextFloat();
+			if (materialScanner.hasNextLine())
+				materialScanner.nextLine();
+
+			material.setName(name);
+			material.setItemType(iType);
+			material.setStrength(strength);
+			material.setConductivity(conductivity);
+			material.setWeight(weightPerUnit);
+			material.setHealthMod(healthMod);
+
+			this.itemTemplateDataMaterial.put(material.getName(), material);
+		}
+		materialScanner.close();
 	}
 
 	private void collectArmorData() {
-		this.itemTemplateDataArmor.put(Size.Small, new HashMap<ArmorName, Armor>());
-		this.itemTemplateDataArmor.put(Size.Medium, new HashMap<ArmorName, Armor>());
-		this.itemTemplateDataArmor.put(Size.Large, new HashMap<ArmorName, Armor>());
+		this.itemTemplateDataArmor.put(Size.Small,
+				new HashMap<ArmorName, ArmorTemplate>());
+		this.itemTemplateDataArmor.put(Size.Medium,
+				new HashMap<ArmorName, ArmorTemplate>());
+		this.itemTemplateDataArmor.put(Size.Large,
+				new HashMap<ArmorName, ArmorTemplate>());
 
 		File armorData = new File(itemDataPath + "Wearables/armor.txt");
 		Scanner dataScanner = null;
@@ -64,24 +100,23 @@ public class ItemDataLoader {
 
 		while (dataScanner.hasNextLine()) {
 			// Skip over #
-			if (dataScanner.hasNextLine())
-				dataScanner.nextLine();
+			dataScanner.nextLine();
 
-			Armor armorSmall = new Armor();
-			Armor armorMedium = new Armor();
-			Armor armorLarge = new Armor();
+			ArmorTemplate armorSmall = new ArmorTemplate();
+			ArmorTemplate armorMedium = new ArmorTemplate();
+			ArmorTemplate armorLarge = new ArmorTemplate();
 
 			armorSmall.setSize(Size.Small);
 			armorMedium.setSize(Size.Medium);
 			armorLarge.setSize(Size.Large);
 
-			Armor[] aArray = new Armor[TOTAL_NUM_OF_SIZES];
+			ArmorTemplate[] aArray = new ArmorTemplate[TOTAL_NUM_OF_SIZES];
 			aArray[0] = armorSmall;
 			aArray[1] = armorMedium;
 			aArray[2] = armorLarge;
 
 			ArmorName name = ArmorName.valueOf(dataScanner.nextLine());
-			MaterialType materialAllowed = MaterialType.valueOf(dataScanner.nextLine());
+			ItemType materialAllowed = ItemType.valueOf(dataScanner.nextLine());
 			int armorClass = dataScanner.nextInt();
 			dataScanner.nextLine();
 
@@ -103,9 +138,12 @@ public class ItemDataLoader {
 	}
 
 	private void collectWeaponData() {
-		this.itemTemplateDataWeapon.put(Size.Small, new HashMap<WeaponName, Weapon>());
-		this.itemTemplateDataWeapon.put(Size.Medium, new HashMap<WeaponName, Weapon>());
-		this.itemTemplateDataWeapon.put(Size.Large, new HashMap<WeaponName, Weapon>());
+		this.itemTemplateDataWeapon.put(Size.Small,
+				new HashMap<WeaponName, WeaponTemplate>());
+		this.itemTemplateDataWeapon.put(Size.Medium,
+				new HashMap<WeaponName, WeaponTemplate>());
+		this.itemTemplateDataWeapon.put(Size.Large,
+				new HashMap<WeaponName, WeaponTemplate>());
 
 		File weaponData = new File(itemDataPath + "Wearables/weapons.txt");
 		Scanner dataScanner = null;
@@ -116,11 +154,11 @@ public class ItemDataLoader {
 			e.printStackTrace();
 		}
 		while (dataScanner.hasNextLine()) {
-			Weapon weaponSmall = new Weapon();
+			WeaponTemplate weaponSmall = new WeaponTemplate();
 			weaponSmall.setWeaponSize(Size.Small);
-			Weapon weaponMedium = new Weapon();
+			WeaponTemplate weaponMedium = new WeaponTemplate();
 			weaponMedium.setWeaponSize(Size.Medium);
-			Weapon weaponLarge = new Weapon();
+			WeaponTemplate weaponLarge = new WeaponTemplate();
 			weaponLarge.setWeaponSize(Size.Large);
 
 			// Skip over "#"
@@ -131,7 +169,7 @@ public class ItemDataLoader {
 			weaponMedium.setName(name);
 			weaponLarge.setName(name);
 
-			Weapon[] wArray = new Weapon[TOTAL_NUM_OF_SIZES];
+			WeaponTemplate[] wArray = new WeaponTemplate[TOTAL_NUM_OF_SIZES];
 			wArray[0] = weaponSmall;
 			wArray[1] = weaponMedium;
 			wArray[2] = weaponLarge;

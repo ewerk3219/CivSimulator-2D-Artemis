@@ -2,6 +2,10 @@ package com.sim.subSystems.entity.util;
 
 import java.util.Random;
 
+/*
+ * To access this, go to Simulator.diceRoller
+ * Don't need to make a local object of this.
+ */
 public class DiceRoller {
 
 	private Random random = new Random();

@@ -15,6 +15,10 @@ import com.sim.subSystems.entity.util.PointTranslator;
 
 public class Layer {
 
+	public static final Direction[] ALL_DIRECTIONS = { Direction.NORTH,
+			Direction.NORTHEAST, Direction.EAST, Direction.SOUTHEAST, Direction.SOUTH,
+			Direction.SOUTHWEST, Direction.WEST, Direction.NORTHWEST };
+
 	private Tile[][] grid;
 
 	public Layer(int length, int width) {
@@ -26,7 +30,6 @@ public class Layer {
 	 * everything non-solid.
 	 */
 	public void testInitTiles() {
-		int standardUnit = SimulationState.STANDARD_UNIT;
 		for (int x = 0; x < grid.length; x++) {
 			for (int y = 0; y < grid[0].length; y++) {
 				// grid[x][y] = new Tile(x * standardUnit, y * standardUnit,
@@ -45,17 +48,18 @@ public class Layer {
 		for (int gridX = 0; gridX < grid.length; gridX++) {
 			for (int gridY = 0; gridY < grid[0].length; gridY++) {
 				Tile tile = grid[gridX][gridY];
-				tile.resetTileShapeCoordinates();
-				g.setColor(tile.getTerrainColor());
-				g.fill(tile.getShape());
-				Image entityAppearance = tile.getEntityAppearance();
-				if (entityAppearance != null) {
-					// may need to fix scaling
-					g.drawImage(entityAppearance,
-							gridX * SimulationState.STANDARD_UNIT
-									+ Simulator.simManager.simState.getRenderX(),
-							gridY * SimulationState.STANDARD_UNIT
-									+ Simulator.simManager.simState.getRenderY());
+				int x = gridX * SimulationState.STANDARD_UNIT
+						+ Simulator.simManager.simState.getRenderX();
+				int y = gridY * SimulationState.STANDARD_UNIT
+						+ Simulator.simManager.simState.getRenderY();
+				if (g.getWorldClip().contains(x, y)) {
+					tile.resetTileShapeCoordinates(x, y);
+					g.setColor(tile.getTerrainColor());
+					g.fill(tile.getShape());
+					Image entityAppearance = tile.getEntityAppearance();
+					if (entityAppearance != null) {
+						g.drawImage(entityAppearance, x, y);
+					}
 				}
 			}
 		}
@@ -174,5 +178,44 @@ public class Layer {
 
 	public Tile[][] getLayerGrid() {
 		return this.grid;
+	}
+
+	/*
+	 * Returns a random tile adjacent to the given one at the grid (x,y)
+	 * position
+	 */
+	public Tile getRandomAdjacentTile(Layer grassField, int x, int y) {
+		for (Direction direction : ALL_DIRECTIONS) {
+			Tile tile = grassField.getTile(x, y, direction);
+			if (tile != null)
+				return tile;
+		}
+		return null;
+	}
+
+	public double getMaxHeight() {
+		double max = -1000;
+		for (int x = 0; x < grid.length; x++) {
+			for (int y = 0; y < grid[0].length; y++) {
+				Tile tile = this.getTile(x, y);
+				if (tile.getHeight() > max) {
+					max = tile.getHeight();
+				}
+			}
+		}
+		return max;
+	}
+
+	public double getMinHeight() {
+		double min = 1000;
+		for (int x = 0; x < grid.length; x++) {
+			for (int y = 0; y < grid[0].length; y++) {
+				Tile tile = this.getTile(x, y);
+				if (tile.getHeight() < min) {
+					min = tile.getHeight();
+				}
+			}
+		}
+		return min;
 	}
 }

@@ -18,20 +18,20 @@ import com.sim.subSystems.entity.components.TestMind;
 import com.sim.subSystems.entity.components.Visible;
 import com.sim.subSystems.entity.entitySystems.Combat;
 import com.sim.subSystems.entity.entitySystems.TestMindAI;
-import com.sim.subSystems.world.generators.GrassField;
+import com.sim.subSystems.world.generators.WorldGenerator;
 import com.sim.subSystems.world.worldParser.TextFileWorldParser;
 
 public class WorldManager {
 
 	private World world;
 	private Area area;
-	private GrassField grassFieldGenerator;
+	private WorldGenerator worldGenerator;
 
 	public WorldManager(String path) {
 		this();
 		area = new Area();
 		area.addLayer(TextFileWorldParser.parseLayer(path));
-		grassFieldGenerator = new GrassField();
+		worldGenerator = new WorldGenerator();
 	}
 
 	public WorldManager() {
@@ -104,7 +104,7 @@ public class WorldManager {
 	}
 
 	public void generateNewLayer() {
-		this.area.addLayer(this.grassFieldGenerator.generateGrassField(100, 100));
+		this.area.addLayer(this.worldGenerator.generateWorldSpace(1000, 1000));
 	}
 
 	public void setCurrentLayer(int layer) {

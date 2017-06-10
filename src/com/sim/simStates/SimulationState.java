@@ -52,6 +52,8 @@ public class SimulationState extends BasicGameState {
 		renderY = 0;
 		renderDeltaX = 0;
 		renderDeltaY = 0;
+		container.getGraphics().setWorldClip(
+				new Rectangle(0, 0, container.getWidth(), container.getHeight()));
 		// Artemis setup
 		initWorldManager();
 		initSimMap();
@@ -124,7 +126,8 @@ public class SimulationState extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
 		g.setBackground(new Color(0, 0, 0)); // clear background
-		g.setClip(new Rectangle(0, 0, container.getWidth(), container.getHeight()));
+		// g.setClip(new Rectangle(0, 0, container.getWidth(),
+		// container.getHeight()));
 		renderGrid(container, g, 100);
 		g.scale(scale, scale);
 		this.worldManager.getArea().render(g);
@@ -164,37 +167,41 @@ public class SimulationState extends BasicGameState {
 		if (container.getInput().isKeyPressed(Keyboard.KEY_ESCAPE)) {
 			game.enterState(1);
 		}
-		if (container.getInput().isKeyDown(Keyboard.KEY_PERIOD)) {
-			this.scale += 0.5f;
+		if (container.getInput().isKeyDown(Keyboard.KEY_EQUALS)) {
+			this.scale += 0.1f;
 		}
-		if (container.getInput().isKeyDown(Keyboard.KEY_COMMA)) {
-			this.scale -= 0.5f;
+		if (container.getInput().isKeyDown(Keyboard.KEY_MINUS)) {
+			this.scale -= 0.1f;
 		}
 		if (container.getInput().isKeyDown(Keyboard.KEY_UP)) {
-			this.renderY -= cameraMoveSpeed;
-		}
-		if (container.getInput().isKeyDown(Keyboard.KEY_DOWN)) {
 			this.renderY += cameraMoveSpeed;
 		}
+		if (container.getInput().isKeyDown(Keyboard.KEY_DOWN)) {
+			this.renderY -= cameraMoveSpeed;
+		}
 		if (container.getInput().isKeyDown(Keyboard.KEY_LEFT)) {
-			this.renderX -= cameraMoveSpeed;
+			this.renderX += cameraMoveSpeed;
 		}
 		if (container.getInput().isKeyDown(Keyboard.KEY_RIGHT)) {
-			this.renderX += cameraMoveSpeed;
+			this.renderX -= cameraMoveSpeed;
 		}
 		if (container.getInput().isKeyPressed(Keyboard.KEY_M)) {
 			System.out.println(
 					"Test Mind AI set to: " + this.worldManager.toggleMindOnOff());
 		}
-		if (container.getInput().isKeyPressed(Keyboard.KEY_EQUALS)) {
-			this.scale -= 0.2f;
-		}
-		if (container.getInput().isKeyPressed(Keyboard.KEY_MINUS)) {
-			this.scale += 0.2f;
+		if (container.getInput().isKeyPressed(Keyboard.KEY_0)) {
+			this.scale = 1.0f;
 		}
 	}
 
+	public static final Rectangle DEBUG_RECTANGLE = new Rectangle(5, 5, 240, 90);
+
 	private void diplaySystemInformation(Graphics g, int x, int y) {
+		g.setColor(Color.black);
+		g.fill(DEBUG_RECTANGLE);
+		g.setColor(Color.gray);
+		g.draw(DEBUG_RECTANGLE);
+		g.setColor(Color.white);
 		g.scale(INFORMATION_DISPLAY_SCALE, INFORMATION_DISPLAY_SCALE);
 		g.drawString("LWJGL Version: " + Sys.getVersion(), x, y);
 		long elapsedTime = (currentTime - startTime) / 1000;

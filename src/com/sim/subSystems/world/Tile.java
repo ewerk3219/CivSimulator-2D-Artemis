@@ -4,11 +4,9 @@ import java.util.ArrayList;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 
-import com.artemis.Component;
 import com.artemis.Entity;
 import com.sim.Simulator;
 import com.sim.simStates.SimulationState;
@@ -51,20 +49,17 @@ public class Tile {
 		// standardUnit / 2);
 	}
 
+	public void resetTileShapeCoordinates(int x, int y) {
+		this.shape.setX(x);
+		this.shape.setY(y);
+	}
+
 	public int getX() {
 		return x;
 	}
 
-	public void setX(int x) {
-		this.x = x;
-	}
-
 	public int getY() {
 		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
 	}
 
 	public boolean isSolid() {

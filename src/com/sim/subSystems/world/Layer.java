@@ -48,9 +48,9 @@ public class Layer {
 		for (int gridX = 0; gridX < grid.length; gridX++) {
 			for (int gridY = 0; gridY < grid[0].length; gridY++) {
 				Tile tile = grid[gridX][gridY];
-				int x = gridX * SimulationState.STANDARD_UNIT
+				int x = gridX * SimulationState.standardUnit
 						+ Simulator.simManager.simState.getRenderX();
-				int y = gridY * SimulationState.STANDARD_UNIT
+				int y = gridY * SimulationState.standardUnit
 						+ Simulator.simManager.simState.getRenderY();
 				if (g.getWorldClip().contains(x, y)) {
 					tile.resetTileShapeCoordinates(x, y);

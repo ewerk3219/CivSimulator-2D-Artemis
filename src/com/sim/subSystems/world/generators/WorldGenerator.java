@@ -16,17 +16,18 @@ public class WorldGenerator {
 
 	public static final int PERCENT_TO_MAKE_SOLID = 3;
 	public static final int NOISE_SEED = 5;
-	public static final int INTERPOLATION_LOOP_COUNT = 3;
+	public static final int INTERPOLATION_LOOP_COUNT = 4;
 
 	@SuppressWarnings("unused")
 	public Layer generateWorldSpace(int length, int width) {
 		Layer world = new Layer(length, width);
 		world.testInitTiles();
-		for (int l = 0; l < world.getLayerGrid().length; l++) {
-			for (int w = 0; w < world.getLayerGrid()[0].length; w++) {
-				Tile tile = world.getTile(l, w);
-				tile.setHeight(Noise.valueCoherentNoise3D(l, w, 1, NOISE_SEED,
-						NoiseQuality.BEST));
+		for (int x = 0; x < world.getLayerGrid().length; x++) {
+			for (int y = 0; y < world.getLayerGrid()[0].length; y++) {
+				Tile tile = world.getTile(x, y);
+				double height = Noise.valueCoherentNoise3D(x / 100.0, y / 100.0, 1,
+						NOISE_SEED, NoiseQuality.BEST);
+				tile.setHeight(height);
 			}
 		}
 		for (int i = 0; i < INTERPOLATION_LOOP_COUNT; i++) {
@@ -120,7 +121,7 @@ public class WorldGenerator {
 						tile.setTerrainColor(Color.blue);
 					} else if (percentHeight < 50) {
 						tile.setTerrainColor(Color.yellow);
-					} else if (percentHeight < 60) {
+					} else if (percentHeight < 75) {
 						tile.setTerrainColor(Color.green);
 					} else if (percentHeight < 80) {
 						tile.setTerrainColor(Color.gray);

@@ -38,7 +38,7 @@ public class Tile {
 	}
 
 	public void resetTileShapeCoordinates() {
-		int standardUnit = SimulationState.STANDARD_UNIT;
+		int standardUnit = SimulationState.standardUnit;
 		this.shape = new Rectangle(
 				Simulator.simManager.simState.getRenderX() + x * standardUnit,
 				Simulator.simManager.simState.getRenderY() + y * standardUnit,

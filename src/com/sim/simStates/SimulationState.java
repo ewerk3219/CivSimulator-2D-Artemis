@@ -20,10 +20,11 @@ import com.sim.subSystems.world.WorldManager;
 
 public class SimulationState extends BasicGameState {
 
-	public static final int STANDARD_UNIT = 32;
+	public static final int DEFAULT_STANDARD_UNIT = 32;
+	public static int standardUnit = 8;
 
 	public static final long FPS_TIME_TO_SLEEP = 28;
-	public static final float INFORMATION_DISPLAY_SCALE = 1.0f;
+	public static final float INFORMATION_DISPLAY_SCALE = 1f;
 	private long startTime = Sys.getTime();
 	private long currentTime = Sys.getTime();
 	private long currentTic;
@@ -33,7 +34,7 @@ public class SimulationState extends BasicGameState {
 
 	private int renderDeltaX; // used for updating entity positions
 	private int renderDeltaY;
-	private int cameraMoveSpeed = STANDARD_UNIT / 8;
+	private int cameraMoveSpeed = standardUnit / 8;
 
 	private float scale;
 	private WorldManager worldManager;
@@ -125,22 +126,27 @@ public class SimulationState extends BasicGameState {
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
+		g.pushTransform();
 		g.setBackground(new Color(0, 0, 0)); // clear background
-		// g.setClip(new Rectangle(0, 0, container.getWidth(),
+		// g.setClip(new Rectangle(0, 0,container.getWidth(),
 		// container.getHeight()));
 		renderGrid(container, g, 100);
 		g.scale(scale, scale);
 		this.worldManager.getArea().render(g);
 		// renderEntityShape(g);
+		g.popTransform();
 		diplaySystemInformation(g, 10, 30);
 	}
 
 	private void renderGrid(GameContainer container, Graphics g, int size) {
+		g.pushTransform();
+		g.scale(1.0f, 1.0f);
 		int resolution = container.getScreenWidth();
 		for (int i = 0; i < resolution; i += size) {
 			g.drawLine(i, 0, i, resolution);
 			g.drawLine(0, i, resolution, i);
 		}
+		g.popTransform();
 	}
 
 	/*
@@ -168,10 +174,16 @@ public class SimulationState extends BasicGameState {
 			game.enterState(1);
 		}
 		if (container.getInput().isKeyDown(Keyboard.KEY_EQUALS)) {
-			this.scale += 0.1f;
+			standardUnit++;
+			if (standardUnit > 8) {
+				standardUnit = 8;
+			}
 		}
 		if (container.getInput().isKeyDown(Keyboard.KEY_MINUS)) {
-			this.scale -= 0.1f;
+			standardUnit--;
+			if (standardUnit < 5) {
+				standardUnit = 5;
+			}
 		}
 		if (container.getInput().isKeyDown(Keyboard.KEY_UP)) {
 			this.renderY += cameraMoveSpeed;
@@ -190,11 +202,17 @@ public class SimulationState extends BasicGameState {
 					"Test Mind AI set to: " + this.worldManager.toggleMindOnOff());
 		}
 		if (container.getInput().isKeyPressed(Keyboard.KEY_0)) {
-			this.scale = 1.0f;
+			standardUnit = 32;
+		}
+		if (container.getInput().isKeyPressed(Keyboard.KEY_9)) {
+			this.cameraMoveSpeed++;
+		}
+		if (container.getInput().isKeyPressed(Keyboard.KEY_8)) {
+			this.cameraMoveSpeed--;
 		}
 	}
 
-	public static final Rectangle DEBUG_RECTANGLE = new Rectangle(5, 5, 240, 90);
+	public static final Rectangle DEBUG_RECTANGLE = new Rectangle(5, 5, 240, 110);
 
 	private void diplaySystemInformation(Graphics g, int x, int y) {
 		g.setColor(Color.black);
@@ -207,6 +225,7 @@ public class SimulationState extends BasicGameState {
 		long elapsedTime = (currentTime - startTime) / 1000;
 		g.drawString("Elapsed Time: " + elapsedTime + " seconds", x, y + 20);
 		g.drawString("Current Tic: " + currentTic, x, y + 40);
+		g.drawString("Current Standard Unit: " + standardUnit, x, y + 60);
 		g.scale(scale, scale);
 	}
 

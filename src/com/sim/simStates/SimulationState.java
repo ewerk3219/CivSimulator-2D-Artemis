@@ -39,10 +39,6 @@ public class SimulationState extends BasicGameState {
 	private float scale;
 	private WorldManager worldManager;
 
-	public ArrayList<Shape> getGrid() {
-		return worldManager.getArea().getSolidShapes();
-	}
-
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
@@ -53,14 +49,21 @@ public class SimulationState extends BasicGameState {
 		renderY = 0;
 		renderDeltaX = 0;
 		renderDeltaY = 0;
-		container.getGraphics().setWorldClip(
-				new Rectangle(0, 0, container.getWidth(), container.getHeight()));
+		resetWorldClip(container);
 		// Artemis setup
 		initWorldManager();
 		initSimMap();
 		// initEntityTest();
 		// -------
 		System.out.println("Initialization complete");
+	}
+
+	private void resetWorldClip(GameContainer container) {
+		container.getGraphics()
+				.setWorldClip(new Rectangle(-SimulationState.standardUnit,
+						-SimulationState.standardUnit,
+						container.getWidth() + SimulationState.standardUnit,
+						container.getHeight() + SimulationState.standardUnit));
 	}
 
 	private void initEntityTest() {
@@ -128,8 +131,6 @@ public class SimulationState extends BasicGameState {
 			throws SlickException {
 		g.pushTransform();
 		g.setBackground(new Color(0, 0, 0)); // clear background
-		// g.setClip(new Rectangle(0, 0,container.getWidth(),
-		// container.getHeight()));
 		renderGrid(container, g, 100);
 		g.scale(scale, scale);
 		this.worldManager.getArea().render(g);
@@ -148,13 +149,6 @@ public class SimulationState extends BasicGameState {
 		}
 		g.popTransform();
 	}
-
-	/*
-	 * private void renderEntityShape(Graphics g) { g.setColor(Color.red); for
-	 * (CollisionShape shape : renderShapes) { g.fill(shape.getShape()); }
-	 * this.renderShapes.clear(); // clear out list of render shapes before //
-	 * next call g.setColor(Color.white); }
-	 */
 
 	private void updateSimTimingAndSleep(int delta) {
 		currentTime = Sys.getTime();
@@ -175,15 +169,17 @@ public class SimulationState extends BasicGameState {
 		}
 		if (container.getInput().isKeyDown(Keyboard.KEY_EQUALS)) {
 			standardUnit++;
-			if (standardUnit > 8) {
-				standardUnit = 8;
+			if (standardUnit > 32) {
+				standardUnit = 32;
 			}
+			resetWorldClip(container);
 		}
 		if (container.getInput().isKeyDown(Keyboard.KEY_MINUS)) {
 			standardUnit--;
-			if (standardUnit < 5) {
-				standardUnit = 5;
+			if (standardUnit < 1) {
+				standardUnit = 1;
 			}
+			resetWorldClip(container);
 		}
 		if (container.getInput().isKeyDown(Keyboard.KEY_UP)) {
 			this.renderY += cameraMoveSpeed;

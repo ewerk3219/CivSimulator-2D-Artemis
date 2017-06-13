@@ -53,12 +53,14 @@ public class Layer {
 				int y = gridY * SimulationState.standardUnit
 						+ Simulator.simManager.simState.getRenderY();
 				if (g.getWorldClip().contains(x, y)) {
-					tile.resetTileShapeCoordinates(x, y);
 					g.setColor(tile.getTerrainColor());
-					g.fill(tile.getShape());
+					g.fillRect(x, y, SimulationState.standardUnit,
+							SimulationState.standardUnit);
 					Image entityAppearance = tile.getEntityAppearance();
 					if (entityAppearance != null) {
-						g.drawImage(entityAppearance, x, y);
+						g.drawImage(entityAppearance.getScaledCopy(
+								SimulationState.standardUnit,
+								SimulationState.standardUnit), x, y);
 					}
 				}
 			}

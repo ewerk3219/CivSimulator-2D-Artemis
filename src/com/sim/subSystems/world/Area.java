@@ -2,7 +2,10 @@ package com.sim.subSystems.world;
 
 import java.util.ArrayList;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
+
+import com.sim.simStates.SimulationState;
 
 public class Area {
 
@@ -95,14 +98,14 @@ public class Area {
 	 * Returns a list of tile shapes who's tile was solid. Used for rendering in
 	 * debug.
 	 */
-	public ArrayList<Shape> getSolidShapes() {
-		ArrayList<Shape> tiles = new ArrayList<Shape>();
+	public ArrayList<Tile> getSolidShapes() {
+		ArrayList<Tile> tiles = new ArrayList<Tile>();
 		Layer layer = this.layerContainer.get(currentLayer);
 		for (int x = 0; x < layer.getLayerGrid().length; x++) {
 			for (int y = 0; y < layer.getLayerGrid()[0].length; y++) {
 				Tile tile = layer.getLayerGrid()[x][y];
 				if (tile.isSolid()) {
-					tiles.add(tile.getShape());
+					tiles.add(tile);
 				}
 			}
 		}

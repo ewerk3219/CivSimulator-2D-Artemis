@@ -18,7 +18,6 @@ public class Tile {
 	private int x, y;
 	private boolean isSolid; // If this tile is pass-able or not.
 	private Color terrainColor;
-	private Shape shape;
 
 	// For Entity tracking
 	private Entity currentEntity;
@@ -33,25 +32,7 @@ public class Tile {
 		this.y = y;
 		this.isSolid = isSolid;
 		this.terrainColor = terrainColor;
-		resetTileShapeCoordinates();
 		currentEntity = null;
-	}
-
-	public void resetTileShapeCoordinates() {
-		int standardUnit = SimulationState.standardUnit;
-		this.shape = new Rectangle(
-				Simulator.simManager.simState.getRenderX() + x * standardUnit,
-				Simulator.simManager.simState.getRenderY() + y * standardUnit,
-				standardUnit, standardUnit);
-		// this.shape = new Circle(
-		// Simulator.simManager.simState.getRenderX() + x * standardUnit,
-		// Simulator.simManager.simState.getRenderY() + y * standardUnit,
-		// standardUnit / 2);
-	}
-
-	public void resetTileShapeCoordinates(int x, int y) {
-		this.shape.setX(x);
-		this.shape.setY(y);
 	}
 
 	public int getX() {
@@ -76,14 +57,6 @@ public class Tile {
 
 	public void setTerrainColor(Color terrainColor) {
 		this.terrainColor = terrainColor;
-	}
-
-	public Shape getShape() {
-		return shape;
-	}
-
-	public void setShape(Shape shape) {
-		this.shape = shape;
 	}
 
 	public void setEntity(Entity e) {

@@ -17,6 +17,7 @@ public class WorldGenerator {
 	public static final int PERCENT_TO_MAKE_SOLID = 3;
 	public static final int NOISE_SEED = 5;
 	public static final int INTERPOLATION_LOOP_COUNT = 4;
+	public static final double POWER = 1.51;
 
 	@SuppressWarnings("unused")
 	public Layer generateWorldSpace(int length, int width) {
@@ -25,8 +26,15 @@ public class WorldGenerator {
 		for (int x = 0; x < world.getLayerGrid().length; x++) {
 			for (int y = 0; y < world.getLayerGrid()[0].length; y++) {
 				Tile tile = world.getTile(x, y);
-				double height = Noise.valueCoherentNoise3D(x / 100.0, y / 100.0, 1,
-						NOISE_SEED, NoiseQuality.BEST);
+				double perlinX = x / 10.0;
+				double perlinY = y / 10.0;
+				double height = Noise.valueCoherentNoise3D(perlinX, perlinY, 1,
+						NOISE_SEED, NoiseQuality.BEST)
+						+ 0.5 * Noise.valueCoherentNoise3D(2 * perlinX, 2 * perlinY, 1,
+								NOISE_SEED, NoiseQuality.BEST)
+						+ 0.25 * Noise.valueCoherentNoise3D(4 * perlinX, 2 * perlinY, 1,
+								NOISE_SEED, NoiseQuality.BEST);
+				height = Math.pow(height + 2, POWER);
 				tile.setHeight(height);
 			}
 		}
@@ -99,7 +107,6 @@ public class WorldGenerator {
 		System.out.println("max: " + max);
 		System.out.println();
 
-		double pseudoMin = min + Math.abs(min);
 		double pseudoMax = Math.abs(min) + max;
 
 		// System.out.println("Pseudo Min: " + pseudoMin);
@@ -122,7 +129,7 @@ public class WorldGenerator {
 					} else if (percentHeight < 50) {
 						tile.setTerrainColor(Color.yellow);
 					} else if (percentHeight < 75) {
-						tile.setTerrainColor(Color.green);
+						tile.setTerrainColor(Color.green.darker(0.1f));
 					} else if (percentHeight < 80) {
 						tile.setTerrainColor(Color.gray);
 					} else if (percentHeight < 90) {

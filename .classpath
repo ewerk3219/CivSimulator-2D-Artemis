@@ -6,11 +6,6 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="CivSimulator 2D/lib/natives"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Slick">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="CivSimulator-2D-Artemis/lib/slick"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="lib/perlinNoise/flow-noise-1.0.0.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="https://flowpowered.com/noise/"/>
@@ -20,6 +15,11 @@
 	<classpathentry kind="lib" path="lib/voronoi/quickhull3d.1.4.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://www.cs.ubc.ca/~lloyd/java/doc/quickhull3d/index.html"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Slick">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="CivSimulator-2D-Artemis/lib/slick"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>

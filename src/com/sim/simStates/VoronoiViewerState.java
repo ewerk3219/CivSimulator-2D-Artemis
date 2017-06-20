@@ -24,15 +24,19 @@ public class VoronoiViewerState extends BasicGameState {
 
 	private Voronoi vd;
 
+	private boolean doneOnce;
+
 	private boolean renderPoints;
 	private boolean renderLines;
 	private boolean renderCircles;
 	private boolean renderMidPoints;
 	private boolean renderSecondaryMidPoint;
+	private boolean renderIntersectionLines;
+	private boolean renderIntersectionPoints;
 
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
-		int siteNum = 5;
+		int siteNum = 3;
 		VoronoiWorldGen vdWorldGen = new VoronoiWorldGen(siteNum);
 		vd = vdWorldGen.getVoronoi();
 
@@ -41,6 +45,10 @@ public class VoronoiViewerState extends BasicGameState {
 		renderCircles = true;
 		renderMidPoints = true;
 		renderSecondaryMidPoint = true;
+		renderIntersectionLines = true;
+		renderIntersectionPoints = true;
+
+		this.doneOnce = false;
 	}
 
 	@Override
@@ -58,6 +66,28 @@ public class VoronoiViewerState extends BasicGameState {
 			renderMidPoints(g);
 		if (this.renderSecondaryMidPoint)
 			renderSecondaryMidPoints(g);
+		if (this.renderIntersectionLines)
+			renderInterectionLines(g);
+		if (this.renderIntersectionPoints)
+			renderIntersectionPoints(g);
+	}
+
+	private void renderIntersectionPoints(Graphics g) {
+		g.pushTransform();
+		g.setColor(Color.lightGray);
+		for (Site site : vd.getIntersectionPoints()) {
+			g.draw(new Circle(site.getX(), site.getY(), 5));
+		}
+		g.popTransform();
+	}
+
+	private void renderInterectionLines(Graphics g) {
+		g.pushTransform();
+		g.setColor(Color.pink);
+		for (Line line : this.vd.getIntersectionLines()) {
+			g.drawLine(line.getP1().getX(), line.getP1().getY(), line.getP2().getX(), line.getP2().getY());
+		}
+		g.popTransform();
 	}
 
 	private void renderSecondaryMidPoints(Graphics g) {
@@ -125,6 +155,12 @@ public class VoronoiViewerState extends BasicGameState {
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 		checkAndUpdateKeys(container, game);
 		updateSimTimingAndSleep(delta);
+		if (!this.doneOnce) {
+			for (int i = 0; i < this.vd.getSecondaryMidPointList().size(); i++) {
+				System.out.println(this.vd.getSecondaryMidPointList().get(i));
+			}
+			this.doneOnce = true;
+		}
 	}
 
 	private void checkAndUpdateKeys(GameContainer container, StateBasedGame game) {
@@ -148,6 +184,12 @@ public class VoronoiViewerState extends BasicGameState {
 		}
 		if (container.getInput().isKeyPressed(Keyboard.KEY_I)) {
 			this.renderSecondaryMidPoint = !this.renderSecondaryMidPoint;
+		}
+		if (container.getInput().isKeyPressed(Keyboard.KEY_U)) {
+			this.renderIntersectionPoints = !this.renderIntersectionPoints;
+		}
+		if (container.getInput().isKeyPressed(Keyboard.KEY_K)) {
+			this.renderIntersectionLines = !this.renderIntersectionLines;
 		}
 	}
 

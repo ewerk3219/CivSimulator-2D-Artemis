@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.newdawn.slick.geom.Circle;
 
@@ -15,6 +16,8 @@ public class Voronoi {
 	private List<Line> delauneyTriangulationLines;
 	private List<Site> midPointSites;
 	private List<Site> secondaryMidPointSites;
+	private List<Line> intersectionLines;
+	private List<Site> intersectionPoints;
 
 	public Voronoi(float[][] points) {
 		if (points.length < 3) {
@@ -24,6 +27,8 @@ public class Voronoi {
 		sortPointsIntoSites(points);
 		midPointSites = new ArrayList<Site>();
 		secondaryMidPointSites = new ArrayList<Site>();
+		intersectionLines = new ArrayList<Line>();
+		intersectionPoints = new ArrayList<Site>();
 		doDelauneyTriangulation();
 		assembleLines();
 	}
@@ -51,21 +56,25 @@ public class Voronoi {
 		 * This gets every combination of three point pairs. Intended to not
 		 * have duplicate points in each pair.
 		 */
-		List<HashSet<Site>> circlePointSet = new ArrayList<HashSet<Site>>();
+		List<TreeSet<Site>> circlePointSet = new ArrayList<TreeSet<Site>>();
 		for (int i = 0; i < sites.size(); i++) {
 			Site A = sites.get(i);
 			// Will eliminate adding a duplicate point to the three point pair.
 			for (int j = 0; j < sites.size(); j++) {
-				Site B = sites.get(j);
-				for (int k = 0; k < sites.size(); k++) {
-					Site C = sites.get(k);
-					// In case there was a duplicate point used.
-					HashSet<Site> pointPair = new HashSet<Site>();
-					pointPair.add(A);
-					pointPair.add(B);
-					pointPair.add(C);
-					if (pointPair.size() == 3) {
-						circlePointSet.add(pointPair);
+				if (j != i) {
+					Site B = sites.get(j);
+					for (int k = 0; k < sites.size(); k++) {
+						if (k != j && k != i) {
+							Site C = sites.get(k);
+							// In case there was a duplicate point used.
+							TreeSet<Site> pointPair = new TreeSet<Site>();
+							pointPair.add(A);
+							pointPair.add(B);
+							pointPair.add(C);
+							if (pointPair.size() == 3 && !isAlreadyExistantSet(circlePointSet, pointPair)) {
+								circlePointSet.add(pointPair);
+							}
+						}
 					}
 				}
 			}
@@ -73,10 +82,29 @@ public class Voronoi {
 
 		// Get all circles from point pairs.
 		for (int currentPair = 0; currentPair < circlePointSet.size(); currentPair++) {
-			HashSet<Site> pointPair = circlePointSet.get(currentPair);
+			TreeSet<Site> pointPair = circlePointSet.get(currentPair);
 			Iterator<Site> points = pointPair.iterator();
 			circumferenceList.add(getCircleFromThreePoints(points.next(), points.next(), points.next()));
 		}
+	}
+
+	private boolean isAlreadyExistantSet(List<TreeSet<Site>> circlePointSet, TreeSet<Site> pointPair) {
+		Iterator<TreeSet<Site>> listIter = circlePointSet.iterator();
+		while (listIter.hasNext()) {
+			TreeSet<Site> confirmedPointPair = listIter.next();
+			Iterator<Site> siteIter = pointPair.iterator();
+			int numOfNonUniqueSites = 0;
+			for (int siteIndex = 0; siteIndex < 3; siteIndex++) {
+				Site currentSite = siteIter.next();
+				if (confirmedPointPair.contains(currentSite)) {
+					numOfNonUniqueSites++;
+				}
+			}
+			if (numOfNonUniqueSites == 3) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private TriangulationCircle getCircleFromThreePoints(Site A, Site B, Site C) {
@@ -87,7 +115,10 @@ public class Voronoi {
 		Line ln2 = Line.getBisectingLine(this.midPointSites, this.secondaryMidPointSites, B, C);
 		// ----
 
+		this.intersectionLines.add(ln1);
+		this.intersectionLines.add(ln2);
 		Site center = ln1.intersection(ln2);
+		this.intersectionPoints.add(center);
 		TriangulationCircle circle = new TriangulationCircle(
 				new Circle(center.getX(), center.getY(), center.distanceTo(A)), A, B, C);
 		return circle;
@@ -203,5 +234,13 @@ public class Voronoi {
 
 	public List<Site> getSecondaryMidPointList() {
 		return this.secondaryMidPointSites;
+	}
+
+	public List<Line> getIntersectionLines() {
+		return this.intersectionLines;
+	}
+
+	public List<Site> getIntersectionPoints() {
+		return this.intersectionPoints;
 	}
 }

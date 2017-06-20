@@ -46,8 +46,8 @@ public class VoronoiWorldGen {
 		int width = Simulator.simManager.getContainer().getWidth();
 		int height = Simulator.simManager.getContainer().getHeight();
 		for (int currentPoint = 0; currentPoint < pointNum; currentPoint++) {
-			points[currentPoint][0] = random.nextInt(width);
-			points[currentPoint][1] = random.nextInt(height);
+			points[currentPoint][0] = random.nextInt(300) + 500;
+			points[currentPoint][1] = random.nextInt(300) + 500;
 		}
 		return points;
 	}

@@ -11,7 +11,6 @@
 			<attribute name="javadoc_location" value="https://flowpowered.com/noise/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/voronoi/mesh.jar"/>
 	<classpathentry kind="lib" path="lib/voronoi/quickhull3d.1.4.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://www.cs.ubc.ca/~lloyd/java/doc/quickhull3d/index.html"/>

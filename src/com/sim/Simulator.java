@@ -2,6 +2,7 @@ package com.sim;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.tiled.TiledMap;
 
 import com.sim.subSystems.entity.util.DiceRoller;

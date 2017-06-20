@@ -40,8 +40,7 @@ public class SimulationState extends BasicGameState {
 	private WorldManager worldManager;
 
 	@Override
-	public void init(GameContainer container, StateBasedGame game)
-			throws SlickException {
+	public void init(GameContainer container, StateBasedGame game) throws SlickException {
 		System.out.println("Initialization...");
 		System.out.println();
 		scale = 1f;
@@ -60,8 +59,7 @@ public class SimulationState extends BasicGameState {
 
 	private void resetWorldClip(GameContainer container) {
 		container.getGraphics()
-				.setWorldClip(new Rectangle(-SimulationState.standardUnit,
-						-SimulationState.standardUnit,
+				.setWorldClip(new Rectangle(-SimulationState.standardUnit, -SimulationState.standardUnit,
 						container.getWidth() + SimulationState.standardUnit,
 						container.getHeight() + SimulationState.standardUnit));
 	}
@@ -84,8 +82,7 @@ public class SimulationState extends BasicGameState {
 	}
 
 	@Override
-	public void update(GameContainer container, StateBasedGame game, int delta)
-			throws SlickException {
+	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 		updateDeltasAndCheckKeys(container, game);
 		this.worldManager.process(delta);
 		updateSimTimingAndSleep(delta);
@@ -101,8 +98,7 @@ public class SimulationState extends BasicGameState {
 		// width: " + container.getWidth());
 	}
 
-	private void updateDeltasAndCheckKeys(GameContainer container,
-			StateBasedGame game) {
+	private void updateDeltasAndCheckKeys(GameContainer container, StateBasedGame game) {
 		int oldX = this.renderX;
 		int oldY = this.renderY;
 		checkKeys(container, game);
@@ -127,8 +123,7 @@ public class SimulationState extends BasicGameState {
 	}
 
 	@Override
-	public void render(GameContainer container, StateBasedGame game, Graphics g)
-			throws SlickException {
+	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		g.pushTransform();
 		g.setBackground(new Color(0, 0, 0)); // clear background
 		renderGrid(container, g, 100);
@@ -164,8 +159,11 @@ public class SimulationState extends BasicGameState {
 	}
 
 	private void checkKeys(GameContainer container, StateBasedGame game) {
-		if (container.getInput().isKeyPressed(Keyboard.KEY_ESCAPE)) {
+		if (container.getInput().isKeyPressed(Keyboard.KEY_1)) {
 			game.enterState(1);
+		}
+		if (container.getInput().isKeyPressed(Keyboard.KEY_2)) {
+			game.enterState(2);
 		}
 		if (container.getInput().isKeyDown(Keyboard.KEY_EQUALS)) {
 			standardUnit++;
@@ -194,10 +192,9 @@ public class SimulationState extends BasicGameState {
 			this.renderX -= cameraMoveSpeed;
 		}
 		if (container.getInput().isKeyPressed(Keyboard.KEY_M)) {
-			System.out.println(
-					"Test Mind AI set to: " + this.worldManager.toggleMindOnOff());
+			System.out.println("Test Mind AI set to: " + this.worldManager.toggleMindOnOff());
 		}
-		if (container.getInput().isKeyPressed(Keyboard.KEY_0)) {
+		if (container.getInput().isKeyPressed(Keyboard.KEY_BACK)) {
 			standardUnit = 32;
 		}
 		if (container.getInput().isKeyPressed(Keyboard.KEY_9)) {

@@ -1,5 +1,6 @@
 package com.sim.simStates;
 
+import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -61,8 +62,13 @@ public class MenuState extends BasicGameState {
 	private void checkButton(GameContainer container, StateBasedGame game) {
 		if (container.getInput().isMousePressed(0)
 				&& buttonShape.contains(container.getInput().getMouseX(), container.getInput().getMouseY())) {
-			game.enterState(0);// new FadeInTransition(), new
-								// FadeOutTransition());
+			game.enterState(0);
+		}
+		if (container.getInput().isKeyPressed(Keyboard.KEY_0)) {
+			game.enterState(0);
+		}
+		if (container.getInput().isKeyPressed(Keyboard.KEY_2)) {
+			game.enterState(2);
 		}
 	}
 

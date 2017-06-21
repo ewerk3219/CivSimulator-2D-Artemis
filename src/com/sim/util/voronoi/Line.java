@@ -76,18 +76,12 @@ public class Line {
 		midX = (p1.getX() + p2.getX()) / 2;
 		midY = (p1.getY() + p2.getY()) / 2;
 		Site midPointAB = new Site(midX, midY);
-		midPointList.add(midPointAB);
+		midPointList.add(midPointAB); // add for display
 
-		float perpenSlope = (p1.getX() - midX) / (midY - p1.getY());
-		float lineYOffset = (p1.getY() + midY) / 2;
-		float lineXOffset = (p1.getX() + midX) / 2;
-		float lineXPoint = midX + 50;
-		float lineYPoint = perpenSlope * (lineXPoint - lineXOffset) + lineYOffset;
-		// float dx = p1.getX() - midX;
-		// float dy = p1.getY() - midY;
-		// new Site(midX + dx, midY - dy);
-		Site midPointABsecondary = new Site(lineXPoint, lineYPoint);
-		secondaryMidPointSites.add(midPointABsecondary);
+		float dx = p1.getX() - p2.getX();
+		float dy = p1.getY() - p2.getY();
+		Site midPointABsecondary = new Site(midX + dy, midY - dx);
+		secondaryMidPointSites.add(midPointABsecondary); // add for display
 		return new Line(midPointAB, midPointABsecondary);
 	}
 }

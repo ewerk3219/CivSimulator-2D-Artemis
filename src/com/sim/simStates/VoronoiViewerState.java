@@ -36,7 +36,7 @@ public class VoronoiViewerState extends BasicGameState {
 
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
-		int siteNum = 3;
+		int siteNum = 20;
 		VoronoiWorldGen vdWorldGen = new VoronoiWorldGen(siteNum);
 		vd = vdWorldGen.getVoronoi();
 
@@ -142,7 +142,7 @@ public class VoronoiViewerState extends BasicGameState {
 	private void renderGrid(GameContainer container, Graphics g, int size) {
 		g.pushTransform();
 		g.scale(1.0f, 1.0f);
-		g.setColor(Color.white);
+		g.setColor(Color.darkGray);
 		int resolution = container.getScreenWidth();
 		for (int i = 0; i < resolution; i += size) {
 			g.drawLine(i, 0, i, resolution);
@@ -210,7 +210,6 @@ public class VoronoiViewerState extends BasicGameState {
 
 	@Override
 	public int getID() {
-		// TODO Auto-generated method stub
 		return 2;
 	}
 }

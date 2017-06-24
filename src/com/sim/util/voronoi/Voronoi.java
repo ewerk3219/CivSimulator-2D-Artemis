@@ -107,6 +107,8 @@ public class Voronoi {
 		return false;
 	}
 
+	// Using three points of a triangle, this will return a TriangulationCircle
+	// object representing a circle hitting each point on the triangle
 	private TriangulationCircle getCircleFromThreePoints(Site A, Site B, Site C) {
 		// get lines with opposite slopes of legs of a triangle centered at each
 		// leg's midpoint.
@@ -129,33 +131,6 @@ public class Voronoi {
 	 * their own three points.
 	 */
 	private void filterOutIllegalCircles(List<TriangulationCircle> circumferenceList) {
-		// for (int i = 0; i < circumferenceList.size(); i++) {
-		// TriangulationCircle tc = circumferenceList.get(i);
-		// Circle circle = tc.getCircle();
-		// Site A = tc.getA();
-		// Site B = tc.getB();
-		// Site C = tc.getC();
-		// if (A.equals(B) || B.equals(C) || C.equals(A)) {
-		// circumferenceList.remove(i);
-		// i--;
-		// } else if (!circle.contains(A.getX(), A.getY()) ||
-		// !circle.contains(B.getX(), B.getY())
-		// || !circle.contains(C.getX(), C.getY())) {
-		// circumferenceList.remove(i);
-		// i--;
-		// } else {
-		// for (int siteIndex = 0; siteIndex < this.sites.size(); siteIndex++) {
-		// Site currentSite = sites.get(siteIndex);
-		// if (!tc.usesSite(currentSite) && circle.contains(currentSite.getX(),
-		// currentSite.getY())) {
-		// circumferenceList.remove(i);
-		// i--;
-		// break;
-		// }
-		// }
-		// }
-		// }
-
 		for (int circleIndex = 0; circleIndex < circumferenceList.size(); circleIndex++) {
 			TriangulationCircle currentTriangulationCircle = circumferenceList.get(circleIndex);
 			Circle circle = currentTriangulationCircle.getCircle();
@@ -169,7 +144,6 @@ public class Voronoi {
 				}
 			}
 		}
-
 	}
 
 	/*
@@ -177,7 +151,6 @@ public class Voronoi {
 	 */
 	private void assembleLines() {
 		this.delauneyTriangulationLines = new ArrayList<Line>();
-		int count = 0;
 		for (int i = 0; i < this.delauneyTriangulation.size(); i++) {
 			// Get lines of a the triangle from the deluaneyTriagulation points.
 			TriangulationCircle tc = this.delauneyTriangulation.get(i);
@@ -208,11 +181,6 @@ public class Voronoi {
 				if (uniqueLines[loadIndex])
 					this.delauneyTriangulationLines.add(lines[loadIndex]);
 			}
-
-			if (count % 100 == 0) {
-				System.out.println("Current line count = " + this.delauneyTriangulationLines.size());
-			}
-			count++;
 		}
 	}
 

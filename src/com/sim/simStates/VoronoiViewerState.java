@@ -36,7 +36,7 @@ public class VoronoiViewerState extends BasicGameState {
 
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
-		int siteNum = 20;
+		int siteNum = 50;
 		VoronoiWorldGen vdWorldGen = new VoronoiWorldGen(siteNum);
 		vd = vdWorldGen.getVoronoi();
 

@@ -165,6 +165,9 @@ public class SimulationState extends BasicGameState {
 		if (container.getInput().isKeyPressed(Keyboard.KEY_2)) {
 			game.enterState(2);
 		}
+		if (container.getInput().isKeyPressed(Keyboard.KEY_3)) {
+			game.enterState(3);
+		}
 		if (container.getInput().isKeyDown(Keyboard.KEY_EQUALS)) {
 			standardUnit++;
 			if (standardUnit > 32) {

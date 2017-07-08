@@ -2,7 +2,6 @@ package com.sim.util.voronoi;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
@@ -13,6 +12,8 @@ public class Voronoi {
 
 	private List<Site> sites;
 	private List<TriangulationCircle> delauneyTriangulation;
+
+	// Debugging information unimportant
 	private List<Line> delauneyTriangulationLines;
 	private List<Site> midPointSites;
 	private List<Site> secondaryMidPointSites;

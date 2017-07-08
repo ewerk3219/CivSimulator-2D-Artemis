@@ -36,7 +36,7 @@ public class VoronoiViewerState extends BasicGameState {
 
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
-		int siteNum = 50;
+		int siteNum = 3;
 		VoronoiWorldGen vdWorldGen = new VoronoiWorldGen(siteNum);
 		vd = vdWorldGen.getVoronoi();
 
@@ -49,6 +49,7 @@ public class VoronoiViewerState extends BasicGameState {
 		renderIntersectionPoints = true;
 
 		this.doneOnce = false;
+
 	}
 
 	@Override

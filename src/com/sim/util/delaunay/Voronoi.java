@@ -10,17 +10,27 @@ import java.util.*;
  * Created by ajwerner on 12/23/13.
  */
 public class Voronoi {
-	public static final double MIN_DRAW_DIM = -5;
-	public static final double MAX_DRAW_DIM = 5;
+
+	public final double minDrawDim;
+	public final double maxDrawDim;
 	// Ghetto but just for drawing stuff
-	private static final double MAX_DIM = 10;
-	private static final double MIN_DIM = -10;
+	public final double maxDim;
+	public final double minDim;
+
 	private double sweepLoc;
 	private final ArrayList<Point> sites;
 	private final ArrayList<VoronoiEdge> edgeList;
 	private HashSet<BreakPoint> breakPoints;
 	private TreeMap<ArcKey, CircleEvent> arcs;
 	private TreeSet<Event> events;
+
+	public ArrayList<Point> getSites() {
+		return sites;
+	}
+
+	public HashSet<BreakPoint> getBreakPoints() {
+		return breakPoints;
+	}
 
 	public double getSweepLoc() {
 		return sweepLoc;
@@ -36,7 +46,7 @@ public class Voronoi {
 			}
 			// StdDraw.setCanvasSize(1024, 1024);
 			// StdDraw.setScale(-.1, 1.1);
-			Voronoi v = new Voronoi(sites, true);
+			Voronoi v = new Voronoi(sites, -5, 5, 0, 10);
 			// v.show();
 		} else {
 			int numTrials = 5;
@@ -47,6 +57,7 @@ public class Voronoi {
 				for (int i = 0; i < numTrials; i++) {
 					res[i] = randomTrial(n);
 				}
+				System.out.println("Site Number: " + n);
 				// System.out.printf("%10d:\t%-5.6f +/- %f \n", n,
 				// StdStats.mean(res),
 				// StdStats.stddev(res) / Math.sqrt(numTrials));
@@ -64,19 +75,36 @@ public class Voronoi {
 			sites.add(new Point(rnd.nextDouble(), rnd.nextDouble()));
 		}
 		// start = s.elapsedTime();
-		Voronoi v = new Voronoi(sites);
+		Voronoi v = new Voronoi(sites, -5, 5, 0, 10);
 		// stop = s.elapsedTime();
 
 		// return stop - start;
 		return -1;
 	}
 
-	public Voronoi(ArrayList<Point> sites) {
-		this(sites, false);
-	}
-
-	public Voronoi(ArrayList<Point> sites, boolean animate) {
+	/**
+	 * Contructs a voronoi diagram.
+	 * 
+	 * @throws RuntimeException
+	 *             If a point in the list of sites is outside of the border.
+	 * 
+	 * @param sites
+	 *            List of points that will be used as sites in the diagram.
+	 * @param minDrawDim
+	 *            minimum draw dimension. (May be a dummy variable)
+	 * @param maxDrawDim
+	 *            maximum draw dimension. (May be a dummy variable)
+	 * @param minDim
+	 *            minimum dimension.
+	 * @param maxDim
+	 *            maximum dimension.
+	 */
+	public Voronoi(ArrayList<Point> sites, double minDrawDim, double maxDrawDim, double minDim, double maxDim) {
 		// initialize data structures;
+		this.minDrawDim = minDrawDim;
+		this.maxDrawDim = maxDrawDim;
+		this.minDim = minDim;
+		this.maxDim = maxDim;
 		this.sites = sites;
 		edgeList = new ArrayList<VoronoiEdge>(sites.size());
 		events = new TreeSet<Event>();
@@ -84,12 +112,12 @@ public class Voronoi {
 		arcs = new TreeMap<ArcKey, CircleEvent>();
 
 		for (Point site : sites) {
-			if ((site.x > MAX_DIM || site.x < MIN_DIM) || (site.y > MAX_DIM || site.y < MIN_DIM))
+			if ((site.x > maxDim || site.x < minDim) || (site.y > maxDim || site.y < minDim))
 				throw new RuntimeException(
-						String.format("Invalid site in input, sites must be between %f and %f", MIN_DIM, MAX_DIM));
+						String.format("Invalid site in input, sites must be between %f and %f", minDim, maxDim));
 			events.add(new Event(site));
 		}
-		sweepLoc = MAX_DIM;
+		sweepLoc = maxDim;
 		do {
 			Event cur = events.pollFirst();
 			sweepLoc = cur.p.y;
@@ -101,7 +129,7 @@ public class Voronoi {
 			}
 		} while ((events.size() > 0));
 
-		this.sweepLoc = MIN_DIM; // hack to draw negative infinite points
+		this.sweepLoc = minDim; // hack to draw negative infinite points
 		for (BreakPoint bp : breakPoints) {
 			bp.finish();
 		}

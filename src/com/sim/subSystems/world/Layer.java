@@ -1,6 +1,9 @@
 package com.sim.subSystems.world;
 
 import java.awt.Point;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -16,8 +19,9 @@ import com.sim.subSystems.entity.util.PointTranslator;
 public class Layer {
 
 	public static final Direction[] ALL_DIRECTIONS = { Direction.NORTH,
-			Direction.NORTHEAST, Direction.EAST, Direction.SOUTHEAST, Direction.SOUTH,
-			Direction.SOUTHWEST, Direction.WEST, Direction.NORTHWEST };
+			Direction.NORTHEAST, Direction.EAST, Direction.SOUTHEAST,
+			Direction.SOUTH, Direction.SOUTHWEST, Direction.WEST,
+			Direction.NORTHWEST };
 
 	private Tile[][] grid;
 
@@ -44,28 +48,45 @@ public class Layer {
 	 * Renders this Layer with displayX and displayY being the origin. (i.e. the
 	 * top left corner)
 	 */
-	public void renderLayer(Graphics g) {
+	public void renderLayer(Graphics g, int standardUnit) {
 		for (int gridX = 0; gridX < grid.length; gridX++) {
 			for (int gridY = 0; gridY < grid[0].length; gridY++) {
 				Tile tile = grid[gridX][gridY];
-				int x = gridX * SimulationState.standardUnit
-						+ Simulator.simManager.simState.getRenderX();
-				int y = gridY * SimulationState.standardUnit
-						+ Simulator.simManager.simState.getRenderY();
+				int x = Area.gridXToRenderCoordX(gridX);
+				int y = Area.gridYToRenderCoordY(gridY);
 				if (g.getWorldClip().contains(x, y)) {
 					g.setColor(tile.getTerrainColor());
-					g.fillRect(x, y, SimulationState.standardUnit,
-							SimulationState.standardUnit);
+					g.fillRect(x, y, standardUnit, standardUnit);
 					Image entityAppearance = tile.getEntityAppearance();
 					if (entityAppearance != null) {
-						g.drawImage(entityAppearance.getScaledCopy(
-								SimulationState.standardUnit,
-								SimulationState.standardUnit), x, y);
+						g.drawImage(entityAppearance.getScaledCopy(standardUnit,
+								standardUnit), x, y);
 					}
 				}
 			}
 		}
 		g.setColor(Color.white);
+	}
+
+	/**
+	 * Renders everything within the (startX, startY) to (endX, endY) selection.
+	 */
+	public void renderBlock(Graphics g, int standardUnit, int startX,
+			int startY, int endX, int endY) {
+		for (int x = startX; x < endX; x++) {
+			for (int y = startY; y < endY; y++) {
+				Tile tile = grid[x][y];
+				int renderX = Area.gridXToRenderCoordX(x);
+				int renderY = Area.gridYToRenderCoordY(y);
+				g.setColor(tile.getTerrainColor());
+				g.fillRect(renderX, renderY, standardUnit, standardUnit);
+				Image entityAppearance = tile.getEntityAppearance();
+				if (entityAppearance != null) {
+					g.drawImage(entityAppearance.getScaledCopy(standardUnit,
+							standardUnit), renderX, renderX);
+				}
+			}
+		}
 	}
 
 	/*
@@ -149,6 +170,9 @@ public class Layer {
 		return this.getTile(tileP.x, tileP.y).containAnEntity();
 	}
 
+	/**
+	 * Returns the sum of entities within this layer.
+	 */
 	public int getTotalEntities() {
 		int sum = 0;
 		for (int x = 0; x < this.grid.length; x++) {
@@ -168,11 +192,12 @@ public class Layer {
 	}
 
 	/*
-	 * Returns a tile from the grid at the locations x and y. If the location is
-	 * out of the array boundaries, then null will be returned.
+	 * Post: Returns a tile from the grid at the locations x and y. Coordinates
+	 * must be within the bounds of the grid, returns null otherwise.
 	 */
 	public Tile getTile(int x, int y) {
-		if (x >= this.grid.length || x < 0 || y >= this.grid[0].length || y < 0) {
+		if (x >= this.grid.length || x < 0 || y >= this.grid[0].length
+				|| y < 0) {
 			return null;
 		} else
 			return grid[x][y];
@@ -182,21 +207,36 @@ public class Layer {
 		return this.grid;
 	}
 
+	private Random random = new Random();
+
 	/*
 	 * Returns a random tile adjacent to the given one at the grid (x,y)
 	 * position
 	 */
-	public Tile getRandomAdjacentTile(Layer grassField, int x, int y) {
-		for (Direction direction : ALL_DIRECTIONS) {
-			Tile tile = grassField.getTile(x, y, direction);
-			if (tile != null)
-				return tile;
+	public Tile getRandomAdjacentTile(Layer layer, int x, int y) {
+		Set<Integer> indexSet = new HashSet<Integer>();
+		int index = random.nextInt(ALL_DIRECTIONS.length);
+		indexSet.add(index);
+		Direction direction = ALL_DIRECTIONS[index];
+		Tile tile = layer.getTile(x, y, direction);
+		while (tile == null) {
+			index = random.nextInt(ALL_DIRECTIONS.length);
+			while (indexSet.contains(index)) {
+				index = random.nextInt(ALL_DIRECTIONS.length);
+			}
+			indexSet.add(index);
+			if (indexSet.size() == ALL_DIRECTIONS.length) {
+				return null;
+			} else {
+				direction = ALL_DIRECTIONS[index];
+				tile = layer.getTile(x, y, direction);
+			}
 		}
-		return null;
+		return tile;
 	}
 
 	public double getMaxHeight() {
-		double max = -1000;
+		double max = grid[0][0].getHeight();
 		for (int x = 0; x < grid.length; x++) {
 			for (int y = 0; y < grid[0].length; y++) {
 				Tile tile = this.getTile(x, y);
@@ -209,7 +249,7 @@ public class Layer {
 	}
 
 	public double getMinHeight() {
-		double min = 1000;
+		double min = grid[0][0].getHeight();
 		for (int x = 0; x < grid.length; x++) {
 			for (int y = 0; y < grid[0].length; y++) {
 				Tile tile = this.getTile(x, y);

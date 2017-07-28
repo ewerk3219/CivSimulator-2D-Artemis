@@ -2,9 +2,7 @@ package com.sim.subSystems.world;
 
 import java.util.ArrayList;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Shape;
-
+import com.sim.Simulator;
 import com.sim.simStates.SimulationState;
 
 public class Area {
@@ -26,8 +24,14 @@ public class Area {
 	 * Renders the layer grid based on the current layer this Area is focused
 	 * on.
 	 */
-	public void render(Graphics g) {
-		this.layerContainer.get(currentLayer).renderLayer(g);
+	public void render(Graphics g, int standardUnit) {
+		this.layerContainer.get(currentLayer).renderLayer(g, standardUnit);
+	}
+
+	public void renderBlock(Graphics g, int standardUnit, int startX,
+			int startY, int endX, int endY) {
+		this.layerContainer.get(currentLayer).renderBlock(g, standardUnit,
+				startX, startY, endX, endY);
 	}
 
 	/*
@@ -114,5 +118,57 @@ public class Area {
 
 	public void setCurrentLayer(int layer) {
 		this.currentLayer = layer;
+	}
+
+	/**
+	 * Translates grid-X coordinate to renderCoordinate-X for tile grid only.
+	 * 
+	 * @param gridX
+	 *            x-axis coordinate value.
+	 */
+	public static int gridXToRenderCoordX(int gridX) {
+		int renderX = gridX
+				* Simulator.simManager.simState.getRenderManager().standardUnit
+				+ Simulator.simManager.simState.getRenderManager().getRenderX();
+		return renderX;
+	}
+
+	/**
+	 * Translates grid-Y coordinate to renderCoordinate-Y for tile grid only.
+	 * 
+	 * @param gridY
+	 *            y-axis coordinate value.
+	 */
+	public static int gridYToRenderCoordY(int gridY) {
+		int renderY = gridY
+				* Simulator.simManager.simState.getRenderManager().standardUnit
+				+ Simulator.simManager.simState.getRenderManager().getRenderY();
+		return renderY;
+	}
+
+	/**
+	 * Translates render-X coordinate to grid-X coordinate for tile grid only.
+	 * 
+	 * @param renderX
+	 *            x-axis coordinate value for rendering.
+	 */
+	public static int renderXToGridX(int renderX) {
+		int gridX = (renderX
+				- Simulator.simManager.simState.getRenderManager().getRenderX())
+				/ Simulator.simManager.simState.getRenderManager().standardUnit;
+		return gridX;
+	}
+
+	/**
+	 * Translates render-Y coordinate to grid-Y coordinate for tile grid only.
+	 * 
+	 * @param renderY
+	 *            y-axis coordinate value for rendering.
+	 */
+	public static int renderYToGridY(int renderY) {
+		int gridY = (renderY
+				- Simulator.simManager.simState.getRenderManager().getRenderY())
+				/ Simulator.simManager.simState.getRenderManager().standardUnit;
+		return gridY;
 	}
 }

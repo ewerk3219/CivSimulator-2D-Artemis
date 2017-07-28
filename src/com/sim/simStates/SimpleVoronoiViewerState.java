@@ -19,7 +19,7 @@ import com.sim.util.delaunay.VoronoiEdge;
 public class SimpleVoronoiViewerState extends BasicGameState {
 
 	private Voronoi vd;
-	public static final int DECIMAL_NUM = 10000;
+	public static final int DECIMAL_NUM = 1000000;
 
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
@@ -33,7 +33,7 @@ public class SimpleVoronoiViewerState extends BasicGameState {
 	}
 
 	private Random random = new Random();
-	private static final int SITE_NUM = 10000;
+	private static final int SITE_NUM = 50000;
 
 	private void addNPoints(ArrayList<Point> siteList, int minBound, int maxBound) {
 		int rngUpperBound = maxBound + Math.abs(minBound);

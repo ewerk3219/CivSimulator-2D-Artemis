@@ -1,10 +1,14 @@
 package com.sim.util;
 
+import com.sim.Simulator;
+import com.sim.simStates.SimulationState;
+
 public class MathUtil {
 
 	public static float percentDisFromOrigin(float axisCoord, double maxDim) {
 		if (maxDim <= 0) {
-			throw new IllegalArgumentException("maxDim cannot be less than or equal to 0");
+			throw new IllegalArgumentException(
+					"maxDim cannot be less than or equal to 0");
 		}
 		if (axisCoord == 0) {
 			return 0;
@@ -13,7 +17,8 @@ public class MathUtil {
 		}
 	}
 
-	public static float percentDisOffset(float axisCoord, double maxDim, float multiplier) {
+	public static float percentDisOffset(float axisCoord, double maxDim,
+			float multiplier) {
 		return percentDisFromOrigin(axisCoord, maxDim) * multiplier;
 	}
 

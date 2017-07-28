@@ -1,15 +1,9 @@
 package com.sim.subSystems.world;
 
-import java.util.ArrayList;
-
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Shape;
 
 import com.artemis.Entity;
-import com.sim.Simulator;
-import com.sim.simStates.SimulationState;
 import com.sim.subSystems.entity.components.Visible;
 import com.sim.itemData.material.MaterialName;
 

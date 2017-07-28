@@ -21,7 +21,6 @@ public class ArmorTemplate implements Item {
 
 	@Override
 	public float getItemWeight() {
-		// TODO Auto-generated method stub
 		return weight;
 	}
 
@@ -68,8 +67,6 @@ public class ArmorTemplate implements Item {
 
 	@Override
 	public ItemType getItemType() {
-		// TODO Auto-generated method stub
 		return itemType;
 	}
-
 }

@@ -30,10 +30,10 @@ public class WorldGenerator {
 				double perlinY = y / 10.0;
 				double height = Noise.valueCoherentNoise3D(perlinX, perlinY, 1,
 						NOISE_SEED, NoiseQuality.BEST)
-						+ 0.5 * Noise.valueCoherentNoise3D(2 * perlinX, 2 * perlinY, 1,
-								NOISE_SEED, NoiseQuality.BEST)
-						+ 0.25 * Noise.valueCoherentNoise3D(4 * perlinX, 2 * perlinY, 1,
-								NOISE_SEED, NoiseQuality.BEST);
+						+ 0.5 * Noise.valueCoherentNoise3D(2 * perlinX,
+								2 * perlinY, 1, NOISE_SEED, NoiseQuality.BEST)
+						+ 0.25 * Noise.valueCoherentNoise3D(4 * perlinX,
+								2 * perlinY, 1, NOISE_SEED, NoiseQuality.BEST);
 				height = Math.pow(height + 2, POWER);
 				tile.setHeight(height);
 			}
@@ -57,9 +57,11 @@ public class WorldGenerator {
 							"Tile center at: (" + l + ", " + w + ")");
 				}
 				Tile centerTile = world.getTile(l, w);
-				double interHeight = Noise.gradientNoise3D(l, w, centerTile.getHeight(),
-						adjacentTile.getX(), adjacentTile.getY(),
-						(int) Math.round(adjacentTile.getHeight() * 10), NOISE_SEED);
+				double interHeight = Noise.gradientNoise3D(l, w,
+						centerTile.getHeight(), adjacentTile.getX(),
+						adjacentTile.getY(),
+						(int) Math.round(adjacentTile.getHeight() * 10),
+						NOISE_SEED);
 				interHeight = (interHeight + centerTile.getHeight()) / 2;
 				centerTile.setHeight(interHeight);
 			}
@@ -120,7 +122,8 @@ public class WorldGenerator {
 				} else {
 					double height = tile.getHeight();
 					height += Math.abs(min);
-					int percentHeight = (int) Math.round((height / pseudoMax) * 100);
+					int percentHeight = (int) Math
+							.round((height / pseudoMax) * 100);
 
 					if (percentHeight < 40) {
 						tile.setTerrainColor(Color.blue.darker(0.2f));

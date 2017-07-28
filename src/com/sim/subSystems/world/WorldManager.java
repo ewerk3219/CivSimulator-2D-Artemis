@@ -50,26 +50,20 @@ public class WorldManager {
 		EntityEdit ed = world.edit(e.getId());
 		Random random = new Random();
 		Layer layer = area.getCurrentLayer();
-		int entityXLocation = random.nextInt(layer.getLayerGrid().length);
-		int entityYLocation = random.nextInt(layer.getLayerGrid()[0].length);
-		while (layer.getTile(entityXLocation, entityYLocation).isSolid()) {
-			entityXLocation = random.nextInt(layer.getLayerGrid().length);
-			entityYLocation = random.nextInt(layer.getLayerGrid()[0].length);
-		}
 		int spriteX = 29;
 		int spriteY = 1;
 		checkForNullPointers(spriteX, spriteY);
 		Image appearance = Simulator.simManager.map.resourceLoader.getSprites()
 				.getSprite(spriteX, spriteY);
 		ed.add(new CollisionType(true));
-		ed.add(new Visible(entityXLocation, entityYLocation, true, appearance));
+		ed.add(new Visible(x, y, true, appearance));
 		ed.add(new TestMind());
 		ed.add(new Life(10));
 		ed.add(new CombatState());
 		ed.add(new CharacterSheet(10, 10, 10, 10, 10, 10, 5, 10));
 
 		// add entities to world
-		layer.getTile(entityXLocation, entityYLocation).setEntity(e);
+		layer.getTile(x, y).setEntity(e);
 	}
 
 	private void checkForNullPointers(int spriteX, int spriteY) {
@@ -85,8 +79,8 @@ public class WorldManager {
 		if (Simulator.simManager.map.resourceLoader.getSprites() == null) {
 			System.out.println("sprites object is null");
 		}
-		if (Simulator.simManager.map.resourceLoader.getSprites().getSprite(spriteX,
-				spriteY) == null) {
+		if (Simulator.simManager.map.resourceLoader.getSprites()
+				.getSprite(spriteX, spriteY) == null) {
 			System.out.println("Image is null");
 		}
 	}

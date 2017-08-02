@@ -144,58 +144,6 @@ public class Area {
 		this.currentLayer = layer;
 	}
 
-	/**
-	 * Translates grid-X coordinate to renderCoordinate-X for tile grid only.
-	 * 
-	 * @param gridX
-	 *            x-axis coordinate value.
-	 */
-	public static int gridXToRenderCoordX(int gridX) {
-		int renderX = gridX
-				* Simulator.simManager.simState.getRenderManager().standardUnit
-				+ Simulator.simManager.simState.getRenderManager().getRenderX();
-		return renderX;
-	}
-
-	/**
-	 * Translates grid-Y coordinate to renderCoordinate-Y for tile grid only.
-	 * 
-	 * @param gridY
-	 *            y-axis coordinate value.
-	 */
-	public static int gridYToRenderCoordY(int gridY) {
-		int renderY = gridY
-				* Simulator.simManager.simState.getRenderManager().standardUnit
-				+ Simulator.simManager.simState.getRenderManager().getRenderY();
-		return renderY;
-	}
-
-	/**
-	 * Translates render-X coordinate to grid-X coordinate for tile grid only.
-	 * 
-	 * @param renderX
-	 *            x-axis coordinate value for rendering.
-	 */
-	public static int renderXToGridX(int renderX) {
-		int gridX = (renderX
-				- Simulator.simManager.simState.getRenderManager().getRenderX())
-				/ Simulator.simManager.simState.getRenderManager().standardUnit;
-		return gridX;
-	}
-
-	/**
-	 * Translates render-Y coordinate to grid-Y coordinate for tile grid only.
-	 * 
-	 * @param renderY
-	 *            y-axis coordinate value for rendering.
-	 */
-	public static int renderYToGridY(int renderY) {
-		int gridY = (renderY
-				- Simulator.simManager.simState.getRenderManager().getRenderY())
-				/ Simulator.simManager.simState.getRenderManager().standardUnit;
-		return gridY;
-	}
-
 	public Tile getTile(int x, int y) {
 		return this.getCurrentLayer().getTile(x, y);
 	}
@@ -216,7 +164,7 @@ public class Area {
 		return this.getCurrentLayer().isEntityInTile(p, directionToLook);
 	}
 
-	public boolean isEntityIntTile(int x, int y) {
+	public boolean isEntityInTile(int x, int y) {
 		return this.getCurrentLayer().isEntityInTile(x, y);
 	}
 

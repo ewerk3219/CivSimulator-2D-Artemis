@@ -46,7 +46,7 @@ public class SimulationState extends BasicGameState {
 
 	private void initWorldManager() {
 		this.worldManager = new WorldManager("testMap");
-		this.worldManager.generateNewLayer();
+		this.worldManager.generateNewLayer(1000);
 		this.worldManager.setCurrentLayer(1);
 	}
 
@@ -65,7 +65,7 @@ public class SimulationState extends BasicGameState {
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
-		this.renderManager.render(worldManager.getArea());
+		this.renderManager.render();
 	}
 
 	private void updateSimTimingAndSleep(int delta) {

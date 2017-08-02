@@ -44,14 +44,14 @@ public class TestMindAI extends IteratingSystem {
 			Direction directionToGo = this.getRandomDirection();
 			Visible visible = mVisible.get(entityId);
 			int counter = 0;
-			Tile designatedTile = worldManager.getArea().getTile(visible.getX(),
+			Tile designatedTile = worldManager.getTile(visible.getX(),
 					visible.getY(), directionToGo);
 			boolean isMoving = true;
 			while (designatedTile.isSolid()
 					|| designatedTile.containAnEntity()) {
 
 				directionToGo = this.getRandomDirection();
-				designatedTile = worldManager.getArea().getTile(visible.getX(),
+				designatedTile = worldManager.getTile(visible.getX(),
 						visible.getY(), directionToGo);
 
 				// System.out.println("In loop counter = " + counter);
@@ -65,7 +65,7 @@ public class TestMindAI extends IteratingSystem {
 			// DON'T UPDATE THE VISIBLE COMPONENT IN HERE!!!!
 			Entity currentEntity = worldManager.getEntity(entityId);
 			if (isMoving) {
-				worldManager.getArea().moveEntityTo(currentEntity,
+				worldManager.moveEntityTo(currentEntity,
 						directionToGo);
 			}
 
@@ -84,25 +84,26 @@ public class TestMindAI extends IteratingSystem {
 	 */
 	private Direction identifyThreatDirection(Visible visible) {
 		Point currentPos = new Point(visible.getX(), visible.getY());
-		Area area = Simulator.simManager.simState.getWorldManager().getArea();
-		if (area.isEntityInTile(currentPos, Direction.NORTH)) {
+		WorldManager manager = Simulator.simManager.simState.getWorldManager();
+		if (manager.isEntityInTile(currentPos, Direction.NORTH)) {
 			return Direction.NORTH;
-		} else if (area.isEntityInTile(currentPos, Direction.EAST)) {
+		} else if (manager.isEntityInTile(currentPos, Direction.EAST)) {
 			return Direction.EAST;
-		} else if (area.isEntityInTile(currentPos, Direction.SOUTH)) {
+		} else if (manager.isEntityInTile(currentPos, Direction.SOUTH)) {
 			return Direction.SOUTH;
-		} else if (area.isEntityInTile(currentPos, Direction.WEST)) {
+		} else if (manager.isEntityInTile(currentPos, Direction.WEST)) {
 			return Direction.WEST;
-		} else if (area.isEntityInTile(currentPos, Direction.NORTHEAST)) {
+		} else if (manager.isEntityInTile(currentPos, Direction.NORTHEAST)) {
 			return Direction.NORTHEAST;
-		} else if (area.isEntityInTile(currentPos, Direction.SOUTHEAST)) {
+		} else if (manager.isEntityInTile(currentPos, Direction.SOUTHEAST)) {
 			return Direction.SOUTHEAST;
-		} else if (area.isEntityInTile(currentPos, Direction.SOUTHWEST)) {
+		} else if (manager.isEntityInTile(currentPos, Direction.SOUTHWEST)) {
 			return Direction.SOUTHWEST;
-		} else if (area.isEntityInTile(currentPos, Direction.NORTHWEST)) {
+		} else if (manager.isEntityInTile(currentPos, Direction.NORTHWEST)) {
 			return Direction.NORTHWEST;
+		} else {
+			throw new RuntimeException("Possible direction not checked");
 		}
-		return null;
 	}
 
 	private Direction getRandomDirection() {

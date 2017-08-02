@@ -50,8 +50,8 @@ public class Layer {
 		for (int gridX = 0; gridX < grid.length; gridX++) {
 			for (int gridY = 0; gridY < grid[0].length; gridY++) {
 				Tile tile = grid[gridX][gridY];
-				int x = Area.gridXToRenderCoordX(gridX);
-				int y = Area.gridYToRenderCoordY(gridY);
+				int x = WorldManager.gridXToRenderCoordX(gridX);
+				int y = WorldManager.gridYToRenderCoordY(gridY);
 				if (g.getWorldClip().contains(x, y)) {
 					g.setColor(tile.getTerrainColor());
 					g.fillRect(x, y, standardUnit, standardUnit);
@@ -74,8 +74,8 @@ public class Layer {
 		for (int x = startX; x < endX; x++) {
 			for (int y = startY; y < endY; y++) {
 				Tile tile = grid[x][y];
-				int renderX = Area.gridXToRenderCoordX(x);
-				int renderY = Area.gridYToRenderCoordY(y);
+				int renderX = WorldManager.gridXToRenderCoordX(x);
+				int renderY = WorldManager.gridYToRenderCoordY(y);
 				g.setColor(tile.getTerrainColor());
 				g.fillRect(renderX, renderY, standardUnit, standardUnit);
 				Image entityAppearance = tile.getEntityAppearance();

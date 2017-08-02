@@ -9,7 +9,7 @@ import com.sim.itemData.material.MaterialName;
 
 public class Tile {
 
-	private int x, y;
+	private final int x, y;
 	private boolean isSolid; // If this tile is pass-able or not.
 	private Color terrainColor;
 

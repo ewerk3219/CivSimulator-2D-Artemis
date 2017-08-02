@@ -9,9 +9,8 @@ import com.sim.subSystems.entity.components.CharacterSheet;
 import com.sim.subSystems.entity.components.CombatState;
 import com.sim.subSystems.entity.components.Life;
 import com.sim.subSystems.entity.components.Visible;
-import com.sim.subSystems.world.Area;
-import com.sim.subSystems.world.Layer;
 import com.sim.subSystems.world.Tile;
+import com.sim.subSystems.world.WorldManager;
 
 public class Combat extends IteratingSystem {
 
@@ -29,16 +28,17 @@ public class Combat extends IteratingSystem {
 
 	@Override
 	protected void process(int entityId) {
-		Area area = Simulator.simManager.simState.getWorldManager().getArea();
+		WorldManager manager = Simulator.simManager.simState.getWorldManager();
 		Visible visible = mVisible.get(entityId);
 		CombatState combatState = mCombatState.get(entityId);
-		if (combatState.isAttackOther() && area.isEntityInTile(visible.getX(),
-				visible.getY(), combatState.getDirectionToAttack())) {
+		if (combatState.isAttackOther()
+				&& manager.isEntityInTile(visible.getX(), visible.getY(),
+						combatState.getDirectionToAttack())) {
 
 			// get character sheets
 			CharacterSheet csAttacker = mCharacterSheet.get(entityId);
 
-			Tile defenderTile = area.getTile(visible.getX(), visible.getY(),
+			Tile defenderTile = manager.getTile(visible.getX(), visible.getY(),
 					combatState.getDirectionToAttack());
 			Entity entityDefender = defenderTile.getEntity();
 			CharacterSheet csDefender = mCharacterSheet.get(entityDefender);
@@ -64,7 +64,7 @@ public class Combat extends IteratingSystem {
 
 				// Important to remove entity from game world as well, otherwise
 				// fatal error will occur
-				area.getTile(defenderVisible.getX(), defenderVisible.getY())
+				manager.getTile(defenderVisible.getX(), defenderVisible.getY())
 						.removeEntity();
 				System.out.println("Death");
 			}

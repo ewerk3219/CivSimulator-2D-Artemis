@@ -61,57 +61,55 @@ public class RenderManager {
 		this.renderDeltaY = this.renderY - oldY;
 	}
 
-	public void render(Area specificArea) {
+	public void render() {
 		g.pushTransform();
 		g.setBackground(new Color(0, 0, 0)); // clear background
 		renderGrid(100);
 		g.scale(scale, scale);
-		renderBlock(specificArea);
+		renderBlock();
 		// renderEntityShape(g);
 		g.popTransform();
-		diplaySystemInformation(g, 10, 30);
+		diplaySystemInformation(g, 10, 50);
 	}
 
 	/**
 	 * Alternate method of rendering an area. Optimized version of the first
 	 * rendering method.
 	 */
-	private void renderBlock(Area specificArea) {
-		int startX = Area.renderXToGridX(0);
+	private void renderBlock() {
+		int startX = WorldManager.renderXToGridX(0);
 		if (startX < 0) { // bounding within array
 			startX = 0;
 		}
-		int startY = Area.renderYToGridY(0);
+		int startY = WorldManager.renderYToGridY(0);
 		if (startY < 0) { // bounding within array
 			startY = 0;
 		}
-		int endX = Area.renderXToGridX(gc.getWidth()) + 1;
-		if (endX >= specificArea.getGridWidth()) {
+		int endX = WorldManager.renderXToGridX(gc.getWidth()) + 1;
+		if (endX >= simState.getWorldManager().getGridWidth()) {
 			// bounding within array
-			endX = specificArea.getGridWidth();
+			endX = simState.getWorldManager().getGridWidth();
 		}
-		int endY = Area.renderYToGridY(gc.getHeight()) + 1;
-		if (endY >= specificArea.getGridHeight()) {
+		int endY = WorldManager.renderYToGridY(gc.getHeight()) + 1;
+		if (endY >= simState.getWorldManager().getGridHeight()) {
 			// bounding within array
-			endY = specificArea.getGridHeight();
+			endY = simState.getWorldManager().getGridHeight();
 		}
-		specificArea.renderBlock(g, standardUnit, startX, startY, endX, endY);
+		simState.getWorldManager().renderBlock(g, standardUnit, startX, startY,
+				endX, endY);
 
 	}
 
 	private void renderGrid(int size) {
-		g.pushTransform();
-		g.scale(1.0f, 1.0f);
 		int resolution = gc.getScreenWidth();
 		for (int i = 0; i < resolution; i += size) {
 			g.drawLine(i, 0, i, resolution);
 			g.drawLine(0, i, resolution, i);
 		}
-		g.popTransform();
 	}
 
 	public static final Rectangle DEBUG_RECTANGLE = new Rectangle(5, 5, 240,
-			110);
+			125);
 	public static final float INFORMATION_DISPLAY_SCALE = 1f;
 
 	private void diplaySystemInformation(Graphics g, int x, int y) {
@@ -182,8 +180,8 @@ public class RenderManager {
 		if (gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
 			int mouseX = gc.getInput().getMouseX();
 			int mouseY = gc.getInput().getMouseY();
-			int gridX = Area.renderXToGridX(mouseX);
-			int gridY = Area.renderYToGridY(mouseY);
+			int gridX = WorldManager.renderXToGridX(mouseX);
+			int gridY = WorldManager.renderYToGridY(mouseY);
 			System.out.println("Mouse Point in grid Coords   : (" + gridX + ", "
 					+ gridY + ")");
 			System.out.println("Mouse Point in render Coords : (" + mouseX

@@ -86,14 +86,14 @@ public class RenderManager {
 			startY = 0;
 		}
 		int endX = Area.renderXToGridX(gc.getWidth()) + 1;
-		if (endX >= specificArea.getCurrentLayer().getLayerGrid().length) {
+		if (endX >= specificArea.getGridWidth()) {
 			// bounding within array
-			endX = specificArea.getCurrentLayer().getLayerGrid().length;
+			endX = specificArea.getGridWidth();
 		}
 		int endY = Area.renderYToGridY(gc.getHeight()) + 1;
-		if (endY >= specificArea.getCurrentLayer().getLayerGrid()[0].length) {
+		if (endY >= specificArea.getGridHeight()) {
 			// bounding within array
-			endY = specificArea.getCurrentLayer().getLayerGrid()[0].length;
+			endY = specificArea.getGridHeight();
 		}
 		specificArea.renderBlock(g, standardUnit, startX, startY, endX, endY);
 

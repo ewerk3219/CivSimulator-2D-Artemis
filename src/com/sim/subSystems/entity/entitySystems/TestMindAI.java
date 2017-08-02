@@ -1,7 +1,6 @@
 package com.sim.subSystems.entity.entitySystems;
 
 import java.awt.Point;
-import java.util.Random;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -15,7 +14,7 @@ import com.sim.subSystems.entity.components.CombatState;
 import com.sim.subSystems.entity.components.Life;
 import com.sim.subSystems.entity.components.TestMind;
 import com.sim.subSystems.entity.components.Visible;
-import com.sim.subSystems.world.Layer;
+import com.sim.subSystems.world.Area;
 import com.sim.subSystems.world.Tile;
 import com.sim.subSystems.world.WorldManager;
 
@@ -31,8 +30,8 @@ public class TestMindAI extends IteratingSystem {
 	private boolean isOperationAllowed;
 
 	public TestMindAI() {
-		super(Aspect.all(TestMind.class, Visible.class, CollisionType.class, Life.class,
-				CombatState.class, CharacterSheet.class));
+		super(Aspect.all(TestMind.class, Visible.class, CollisionType.class,
+				Life.class, CombatState.class, CharacterSheet.class));
 		this.isOperationAllowed = true;
 	}
 
@@ -40,18 +39,20 @@ public class TestMindAI extends IteratingSystem {
 	protected void process(int entityId) {
 		if (isOperationAllowed) {
 			// Movement Test
-			WorldManager worldManager = Simulator.simManager.simState.getWorldManager();
+			WorldManager worldManager = Simulator.simManager.simState
+					.getWorldManager();
 			Direction directionToGo = this.getRandomDirection();
 			Visible visible = mVisible.get(entityId);
 			int counter = 0;
-			Tile designatedTile = worldManager.getArea().getCurrentLayer()
-					.getTile(visible.getX(), visible.getY(), directionToGo);
+			Tile designatedTile = worldManager.getArea().getTile(visible.getX(),
+					visible.getY(), directionToGo);
 			boolean isMoving = true;
-			while (designatedTile.isSolid() || designatedTile.containAnEntity()) {
+			while (designatedTile.isSolid()
+					|| designatedTile.containAnEntity()) {
 
 				directionToGo = this.getRandomDirection();
-				designatedTile = worldManager.getArea().getCurrentLayer()
-						.getTile(visible.getX(), visible.getY(), directionToGo);
+				designatedTile = worldManager.getArea().getTile(visible.getX(),
+						visible.getY(), directionToGo);
 
 				// System.out.println("In loop counter = " + counter);
 				if (counter > 24) {
@@ -64,7 +65,7 @@ public class TestMindAI extends IteratingSystem {
 			// DON'T UPDATE THE VISIBLE COMPONENT IN HERE!!!!
 			Entity currentEntity = worldManager.getEntity(entityId);
 			if (isMoving) {
-				worldManager.getArea().getCurrentLayer().moveEntityTo(currentEntity,
+				worldManager.getArea().moveEntityTo(currentEntity,
 						directionToGo);
 			}
 
@@ -83,31 +84,27 @@ public class TestMindAI extends IteratingSystem {
 	 */
 	private Direction identifyThreatDirection(Visible visible) {
 		Point currentPos = new Point(visible.getX(), visible.getY());
-		Layer currentLayer = Simulator.simManager.simState.getWorldManager().getArea()
-				.getCurrentLayer();
-		if (currentLayer.isEntityInTile(currentPos, Direction.NORTH)) {
+		Area area = Simulator.simManager.simState.getWorldManager().getArea();
+		if (area.isEntityInTile(currentPos, Direction.NORTH)) {
 			return Direction.NORTH;
-		} else if (currentLayer.isEntityInTile(currentPos, Direction.EAST)) {
+		} else if (area.isEntityInTile(currentPos, Direction.EAST)) {
 			return Direction.EAST;
-		} else if (currentLayer.isEntityInTile(currentPos, Direction.SOUTH)) {
+		} else if (area.isEntityInTile(currentPos, Direction.SOUTH)) {
 			return Direction.SOUTH;
-		} else if (currentLayer.isEntityInTile(currentPos, Direction.WEST)) {
+		} else if (area.isEntityInTile(currentPos, Direction.WEST)) {
 			return Direction.WEST;
-		} else if (currentLayer.isEntityInTile(currentPos, Direction.NORTHEAST)) {
+		} else if (area.isEntityInTile(currentPos, Direction.NORTHEAST)) {
 			return Direction.NORTHEAST;
-		} else if (currentLayer.isEntityInTile(currentPos, Direction.SOUTHEAST)) {
+		} else if (area.isEntityInTile(currentPos, Direction.SOUTHEAST)) {
 			return Direction.SOUTHEAST;
-		} else if (currentLayer.isEntityInTile(currentPos, Direction.SOUTHWEST)) {
+		} else if (area.isEntityInTile(currentPos, Direction.SOUTHWEST)) {
 			return Direction.SOUTHWEST;
-		} else if (currentLayer.isEntityInTile(currentPos, Direction.NORTHWEST)) {
+		} else if (area.isEntityInTile(currentPos, Direction.NORTHWEST)) {
 			return Direction.NORTHWEST;
 		}
 		return null;
 	}
 
-	/*
-	 * Returns a random direction.. like Whut?
-	 */
 	private Direction getRandomDirection() {
 		int num = Simulator.diceRoller.roll8();
 		if (num == 1) {
@@ -126,9 +123,11 @@ public class TestMindAI extends IteratingSystem {
 			return Direction.SOUTHWEST;
 		} else if (num == 8) {
 			return Direction.NORTHWEST;
+		} else {
+			throw new RuntimeException(
+					"getRandomDirection should have numbers 1 thru 8 inclusive,"
+							+ " number from random gen did not return this.");
 		}
-		// make compiler happy...
-		return null;
 	}
 
 	public boolean toggleMindOnOff() {
@@ -139,5 +138,4 @@ public class TestMindAI extends IteratingSystem {
 	public void attack(Direction d) {
 
 	}
-
 }

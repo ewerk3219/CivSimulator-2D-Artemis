@@ -1,8 +1,5 @@
 package com.sim.util;
 
-import com.sim.Simulator;
-import com.sim.simStates.SimulationState;
-
 public class MathUtil {
 
 	public static float percentDisFromOrigin(float axisCoord, double maxDim) {

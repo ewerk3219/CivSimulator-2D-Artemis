@@ -11,8 +11,6 @@ import org.newdawn.slick.Image;
 
 import com.artemis.Entity;
 import com.sim.Direction;
-import com.sim.Simulator;
-import com.sim.simStates.SimulationState;
 import com.sim.subSystems.entity.components.Visible;
 import com.sim.subSystems.entity.util.PointTranslator;
 

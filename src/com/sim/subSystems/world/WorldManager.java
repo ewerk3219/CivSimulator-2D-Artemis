@@ -49,7 +49,6 @@ public class WorldManager {
 		Entity e = world.createEntity();
 		EntityEdit ed = world.edit(e.getId());
 		Random random = new Random();
-		Layer layer = area.getCurrentLayer();
 		int spriteX = 29;
 		int spriteY = 1;
 		checkForNullPointers(spriteX, spriteY);
@@ -63,7 +62,7 @@ public class WorldManager {
 		ed.add(new CharacterSheet(10, 10, 10, 10, 10, 10, 5, 10));
 
 		// add entities to world
-		layer.getTile(x, y).setEntity(e);
+		area.getTile(x, y).setEntity(e);
 	}
 
 	private void checkForNullPointers(int spriteX, int spriteY) {

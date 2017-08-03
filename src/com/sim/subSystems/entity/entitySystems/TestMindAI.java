@@ -48,7 +48,7 @@ public class TestMindAI extends IteratingSystem {
 					visible.getY(), directionToGo);
 			boolean isMoving = true;
 			while (designatedTile.isSolid()
-					|| designatedTile.containAnEntity()) {
+					|| designatedTile.containsAnEntity()) {
 
 				directionToGo = this.getRandomDirection();
 				designatedTile = worldManager.getTile(visible.getX(),
@@ -65,8 +65,7 @@ public class TestMindAI extends IteratingSystem {
 			// DON'T UPDATE THE VISIBLE COMPONENT IN HERE!!!!
 			Entity currentEntity = worldManager.getEntity(entityId);
 			if (isMoving) {
-				worldManager.moveEntityTo(currentEntity,
-						directionToGo);
+				worldManager.moveEntityTo(currentEntity, directionToGo);
 			}
 
 			// Attack Test

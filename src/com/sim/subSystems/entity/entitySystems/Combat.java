@@ -40,14 +40,14 @@ public class Combat extends IteratingSystem {
 
 			Tile defenderTile = manager.getTile(visible.getX(), visible.getY(),
 					combatState.getDirectionToAttack());
-			Entity entityDefender = defenderTile.getEntity();
+			Entity entityDefender = defenderTile.getOccupantEntity();
 			CharacterSheet csDefender = mCharacterSheet.get(entityDefender);
 
 			// get damage to entity
 			int damageToOther = calculateDamage(csAttacker, csDefender);
 
 			// do damage to other entity.
-			Life defenderLife = defenderTile.getEntity()
+			Life defenderLife = defenderTile.getOccupantEntity()
 					.getComponent(Life.class);
 			defenderLife.dealDamage(damageToOther);
 			System.out.println(
@@ -65,7 +65,7 @@ public class Combat extends IteratingSystem {
 				// Important to remove entity from game world as well, otherwise
 				// fatal error will occur
 				manager.getTile(defenderVisible.getX(), defenderVisible.getY())
-						.removeEntity();
+						.removeOccupantEntity();
 				System.out.println("Death");
 			}
 		}

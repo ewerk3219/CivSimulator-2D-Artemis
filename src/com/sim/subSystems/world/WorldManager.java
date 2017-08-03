@@ -61,7 +61,7 @@ public class WorldManager {
 		ed.add(new CharacterSheet(10, 10, 10, 10, 10, 10, 5, 10));
 
 		// add entities to world
-		area.getTile(x, y).setEntity(e);
+		area.getTile(x, y).setOccupantEntity(e);
 	}
 
 	private void checkForNullPointers(int spriteX, int spriteY) {

@@ -55,7 +55,7 @@ public class Layer {
 				if (g.getWorldClip().contains(x, y)) {
 					g.setColor(tile.getTerrainColor());
 					g.fillRect(x, y, standardUnit, standardUnit);
-					Image entityAppearance = tile.getEntityAppearance();
+					Image entityAppearance = tile.getOccupantEntityAppearance();
 					if (entityAppearance != null) {
 						g.drawImage(entityAppearance.getScaledCopy(standardUnit,
 								standardUnit), x, y);
@@ -78,7 +78,7 @@ public class Layer {
 				int renderY = WorldManager.gridYToRenderCoordY(y);
 				g.setColor(tile.getTerrainColor());
 				g.fillRect(renderX, renderY, standardUnit, standardUnit);
-				Image entityAppearance = tile.getEntityAppearance();
+				Image entityAppearance = tile.getOccupantEntityAppearance();
 				if (entityAppearance != null) {
 					g.drawImage(entityAppearance.getScaledCopy(standardUnit,
 							standardUnit), renderX, renderX);
@@ -117,7 +117,7 @@ public class Layer {
 	 */
 	public boolean moveEntityTo(Entity e, int x, int y) {
 		Tile designatedTile = this.getTile(x, y);
-		if (designatedTile.isSolid() || designatedTile.containAnEntity()) {
+		if (designatedTile.isSolid() || designatedTile.containsAnEntity()) {
 			return false;
 		}
 		Visible visible = e.getComponent(Visible.class);
@@ -135,8 +135,8 @@ public class Layer {
 			visible.setX(x);
 			visible.setY(y);
 		}
-		getTile(entityXLocation, entityYLocation).removeEntity();
-		getTile(x, y).setEntity(e);
+		getTile(entityXLocation, entityYLocation).removeOccupantEntity();
+		getTile(x, y).setOccupantEntity(e);
 		return true;
 	}
 
@@ -160,12 +160,12 @@ public class Layer {
 	}
 
 	public boolean isEntityInTile(int x, int y) {
-		return this.getTile(x, y).containAnEntity();
+		return this.getTile(x, y).containsAnEntity();
 	}
 
 	public boolean isEntityInTile(int x, int y, Direction directionToLook) {
 		Point tileP = PointTranslator.getNewPoint(x, y, directionToLook);
-		return this.getTile(tileP.x, tileP.y).containAnEntity();
+		return this.getTile(tileP.x, tileP.y).containsAnEntity();
 	}
 
 	/**
@@ -176,7 +176,7 @@ public class Layer {
 		for (int x = 0; x < this.grid.length; x++) {
 			for (int y = 0; y < this.grid[0].length; y++) {
 				Tile tile = this.grid[x][y];
-				if (tile.containAnEntity()) {
+				if (tile.containsAnEntity()) {
 					sum += 1;
 				}
 			}

@@ -1,14 +1,9 @@
 package com.sim.subSystems.world.generators;
 
 import org.newdawn.slick.Color;
-
 import com.flowpowered.noise.Noise;
 import com.flowpowered.noise.NoiseQuality;
-import com.flowpowered.noise.module.modifier.Terrace;
-import com.flowpowered.noise.module.modifier.Turbulence;
-import com.flowpowered.noise.module.source.Voronoi;
 import com.sim.Direction;
-import com.sim.Simulator;
 import com.sim.subSystems.world.Layer;
 import com.sim.subSystems.world.Tile;
 

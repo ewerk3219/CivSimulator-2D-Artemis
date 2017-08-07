@@ -1,11 +1,13 @@
 package com.sim.subSystems.world;
 
+import java.awt.Point;
 import java.util.ArrayList;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Shape;
 
-import com.sim.simStates.SimulationState;
+import org.newdawn.slick.Graphics;
+
+import com.artemis.Entity;
+import com.sim.Direction;
+import com.sim.Simulator;
 
 public class Area {
 
@@ -22,12 +24,38 @@ public class Area {
 		currentLayer = 0;
 	}
 
-	/*
+	/**
 	 * Renders the layer grid based on the current layer this Area is focused
 	 * on.
+	 * 
+	 * @deprecated This is old and shouldn't be used anymore. Optimized version
+	 *             is renderBlock().
 	 */
-	public void render(Graphics g) {
-		this.layerContainer.get(currentLayer).renderLayer(g);
+	public void render(Graphics g, int standardUnit) {
+		this.layerContainer.get(currentLayer).renderLayer(g, standardUnit);
+	}
+
+	/**
+	 * Renders the current layer of this Area
+	 * 
+	 * 
+	 * @param g
+	 *            Graphics object to draw on.
+	 * @param standardUnit
+	 *            A standardized length or magnitude for drawing.
+	 * @param startX
+	 *            Left most x coordinate in view.
+	 * @param startY
+	 *            topmost y coordinate in view.
+	 * @param endX
+	 *            right most x coordinate in view.
+	 * @param endY
+	 *            bottom most y coordinate in view.
+	 */
+	public void renderBlock(Graphics g, int standardUnit, int startX,
+			int startY, int endX, int endY) {
+		this.layerContainer.get(currentLayer).renderBlock(g, standardUnit,
+				startX, startY, endX, endY);
 	}
 
 	/*
@@ -90,7 +118,7 @@ public class Area {
 		}
 	}
 
-	public Layer getCurrentLayer() {
+	private Layer getCurrentLayer() {
 		return this.getLayerContainer().get(currentLayer);
 	}
 
@@ -114,5 +142,41 @@ public class Area {
 
 	public void setCurrentLayer(int layer) {
 		this.currentLayer = layer;
+	}
+
+	public Tile getTile(int x, int y) {
+		return this.getCurrentLayer().getTile(x, y);
+	}
+
+	public Tile getTile(int x, int y, Direction d) {
+		return this.getCurrentLayer().getTile(x, y, d);
+	}
+
+	public int getGridWidth() {
+		return this.getCurrentLayer().getLayerGrid().length;
+	}
+
+	public int getGridHeight() {
+		return this.getCurrentLayer().getLayerGrid()[0].length;
+	}
+
+	public boolean isEntityInTile(Point p, Direction directionToLook) {
+		return this.getCurrentLayer().isEntityInTile(p, directionToLook);
+	}
+
+	public boolean isEntityInTile(int x, int y) {
+		return this.getCurrentLayer().isEntityInTile(x, y);
+	}
+
+	public boolean isEntityInTile(int x, int y, Direction directionToLook) {
+		return this.getCurrentLayer().isEntityInTile(x, y, directionToLook);
+	}
+
+	public void moveEntityTo(Entity e, Direction directionToGo) {
+		this.getCurrentLayer().moveEntityTo(e, directionToGo);
+	}
+
+	public void moveEntityTo(Entity e, int x, int y) {
+		this.getCurrentLayer().moveEntityTo(e, x, y);
 	}
 }

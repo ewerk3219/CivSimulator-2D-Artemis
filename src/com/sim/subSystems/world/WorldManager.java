@@ -1,7 +1,8 @@
 package com.sim.subSystems.world;
 
-import java.util.Random;
+import java.awt.Point;
 
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 
 import com.artemis.Entity;
@@ -9,6 +10,7 @@ import com.artemis.EntityEdit;
 import com.artemis.World;
 import com.artemis.WorldConfiguration;
 import com.artemis.WorldConfigurationBuilder;
+import com.sim.Direction;
 import com.sim.Simulator;
 import com.sim.subSystems.entity.components.CharacterSheet;
 import com.sim.subSystems.entity.components.CollisionType;
@@ -25,13 +27,11 @@ public class WorldManager {
 
 	private World world;
 	private Area area;
-	private WorldGenerator worldGenerator;
 
 	public WorldManager(String path) {
 		this();
 		area = new Area();
 		area.addLayer(TextFileWorldParser.parseLayer(path));
-		worldGenerator = new WorldGenerator();
 	}
 
 	public WorldManager() {
@@ -48,28 +48,20 @@ public class WorldManager {
 	public void addEntity(int x, int y) {
 		Entity e = world.createEntity();
 		EntityEdit ed = world.edit(e.getId());
-		Random random = new Random();
-		Layer layer = area.getCurrentLayer();
-		int entityXLocation = random.nextInt(layer.getLayerGrid().length);
-		int entityYLocation = random.nextInt(layer.getLayerGrid()[0].length);
-		while (layer.getTile(entityXLocation, entityYLocation).isSolid()) {
-			entityXLocation = random.nextInt(layer.getLayerGrid().length);
-			entityYLocation = random.nextInt(layer.getLayerGrid()[0].length);
-		}
 		int spriteX = 29;
 		int spriteY = 1;
 		checkForNullPointers(spriteX, spriteY);
 		Image appearance = Simulator.simManager.map.resourceLoader.getSprites()
 				.getSprite(spriteX, spriteY);
 		ed.add(new CollisionType(true));
-		ed.add(new Visible(entityXLocation, entityYLocation, true, appearance));
+		ed.add(new Visible(x, y, true, appearance));
 		ed.add(new TestMind());
 		ed.add(new Life(10));
 		ed.add(new CombatState());
 		ed.add(new CharacterSheet(10, 10, 10, 10, 10, 10, 5, 10));
 
 		// add entities to world
-		layer.getTile(entityXLocation, entityYLocation).setEntity(e);
+		area.getTile(x, y).setOccupantEntity(e);
 	}
 
 	private void checkForNullPointers(int spriteX, int spriteY) {
@@ -85,14 +77,10 @@ public class WorldManager {
 		if (Simulator.simManager.map.resourceLoader.getSprites() == null) {
 			System.out.println("sprites object is null");
 		}
-		if (Simulator.simManager.map.resourceLoader.getSprites().getSprite(spriteX,
-				spriteY) == null) {
+		if (Simulator.simManager.map.resourceLoader.getSprites()
+				.getSprite(spriteX, spriteY) == null) {
 			System.out.println("Image is null");
 		}
-	}
-
-	public Area getArea() {
-		return area;
 	}
 
 	public Entity getEntity(int entityId) {
@@ -103,11 +91,106 @@ public class WorldManager {
 		return this.world.getSystem(TestMindAI.class).toggleMindOnOff();
 	}
 
-	public void generateNewLayer() {
-		this.area.addLayer(this.worldGenerator.generateWorldSpace(1000, 1000));
+	public void generateNewLayer(int size) {
+		this.area.addLayer(new WorldGenerator().generateWorldSpace(size, size));
 	}
 
 	public void setCurrentLayer(int layer) {
 		this.area.setCurrentLayer(layer);
+	}
+
+	public int getGridWidth() {
+		return area.getGridWidth();
+	}
+
+	public int getGridHeight() {
+		return area.getGridHeight();
+	}
+
+	public Tile getTile(int x, int y) {
+		return area.getTile(x, y);
+	}
+
+	public Tile getTile(int x, int y, Direction d) {
+		return area.getTile(x, y, d);
+	}
+
+	public boolean isEntityInTile(Point p, Direction directionToLook) {
+		return area.isEntityInTile(p, directionToLook);
+	}
+
+	public boolean isEntityInTile(int x, int y, Direction directionToLook) {
+		return area.isEntityInTile(x, y, directionToLook);
+	}
+
+	public boolean isEntityInTile(int x, int y) {
+		return area.isEntityInTile(x, y);
+	}
+
+	public void moveEntityTo(Entity e, Direction directionToGo) {
+		area.moveEntityTo(e, directionToGo);
+	}
+
+	public void moveEntityTo(Entity e, int x, int y) {
+		area.moveEntityTo(e, x, y);
+	}
+
+	public void renderBlock(Graphics g, int standardUnit, int startX,
+			int startY, int endX, int endY) {
+		area.renderBlock(g, standardUnit, startX, startY, endX, endY);
+	}
+
+	// --------------- Statics --------------- \\
+
+	/**
+	 * Translates grid-X coordinate to renderCoordinate-X for tile grid only.
+	 * 
+	 * @param gridX
+	 *            x-axis coordinate value.
+	 */
+	public static int gridXToRenderCoordX(int gridX) {
+		int renderX = gridX
+				* Simulator.simManager.simState.getRenderManager().standardUnit
+				+ Simulator.simManager.simState.getRenderManager().getRenderX();
+		return renderX;
+	}
+
+	/**
+	 * Translates grid-Y coordinate to renderCoordinate-Y for tile grid only.
+	 * 
+	 * @param gridY
+	 *            y-axis coordinate value.
+	 */
+	public static int gridYToRenderCoordY(int gridY) {
+		int renderY = gridY
+				* Simulator.simManager.simState.getRenderManager().standardUnit
+				+ Simulator.simManager.simState.getRenderManager().getRenderY();
+		return renderY;
+	}
+
+	/**
+	 * Translates render-X coordinate to grid-X coordinate for tile grid only.
+	 * 
+	 * @param renderX
+	 *            x-axis coordinate value for rendering.
+	 */
+	public static int renderXToGridX(int renderX) {
+		int gridX = (renderX
+				- Simulator.simManager.simState.getRenderManager().getRenderX())
+				/ Simulator.simManager.simState.getRenderManager().standardUnit;
+		return gridX;
+	}
+
+	/**
+	 * Translates render-Y coordinate to grid-Y coordinate for tile grid only.
+	 * 
+	 * @param renderY
+	 *            y-axis coordinate value for rendering.
+	 */
+	public static int renderYToGridY(int renderY) {
+		int gridY = (renderY
+				- Simulator.simManager.simState.getRenderManager().getRenderY())
+				/ Simulator.simManager.simState.getRenderManager().standardUnit;
+		return gridY;
 	}
 }

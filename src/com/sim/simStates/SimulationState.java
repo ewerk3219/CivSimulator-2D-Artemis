@@ -26,8 +26,8 @@ public class SimulationState extends BasicGameState {
 			throws SlickException {
 		System.out.println("Initialization...");
 		System.out.println();
-		renderManager = new RenderManager(container, container.getGraphics(),
-				game, this);
+		renderManager = new RenderManager(container, container.getGraphics(), game,
+				this);
 		renderManager.resetWorldClip(container);
 		// Artemis setup
 		initWorldManager();
@@ -46,8 +46,6 @@ public class SimulationState extends BasicGameState {
 
 	private void initWorldManager() {
 		this.worldManager = new WorldManager("testMap");
-		this.worldManager.generateNewLayer(1000);
-		this.worldManager.setCurrentLayer(1);
 	}
 
 	private void initSimMap() {

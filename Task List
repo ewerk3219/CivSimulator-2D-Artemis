@@ -1,0 +1,6 @@
+Task List:
+	Feature:
+		- Implement MapMakerState and allow for loading and saving maps in the form of text files.
+			- Must allow for map building and saving.
+			- Add a way to select a previously saved map.
+			- Tools tools tools!

@@ -1,7 +1,5 @@
 package com.sim.subSystems.world;
 
-import java.util.List;
-
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 
@@ -83,6 +81,10 @@ public class Tile {
 
 	public Entity getOccupantEntity() {
 		return this.occupantEntity;
+	}
+
+	public boolean hasOccupant() {
+		return occupantEntity != null;
 	}
 
 	public Entity removeEntity(int index) {

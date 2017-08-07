@@ -4,6 +4,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
+import com.sim.simStates.MapMakerState;
 import com.sim.simStates.MenuState;
 import com.sim.simStates.SimpleVoronoiViewerState;
 import com.sim.simStates.SimulationState;
@@ -14,6 +15,7 @@ public class SimManager extends StateBasedGame {
 	public SimulationState simState;
 	public VoronoiViewerState viewerState;
 	public SimpleVoronoiViewerState sViewerState;
+	public MapMakerState mapMakerState;
 	public SimMap map;
 
 	public SimManager(String name) {
@@ -21,6 +23,7 @@ public class SimManager extends StateBasedGame {
 		simState = new SimulationState();
 		viewerState = new VoronoiViewerState();
 		sViewerState = new SimpleVoronoiViewerState();
+		mapMakerState = new MapMakerState();
 	}
 
 	@Override
@@ -29,6 +32,7 @@ public class SimManager extends StateBasedGame {
 		this.addState(simState);
 		this.addState(viewerState);
 		this.addState(sViewerState);
+		this.addState(mapMakerState);
 	}
 
 	/*

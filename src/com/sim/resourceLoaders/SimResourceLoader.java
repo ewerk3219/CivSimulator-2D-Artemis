@@ -52,6 +52,14 @@ public class SimResourceLoader {
 		return this.icons;
 	}
 
+	/**
+	 * 
+	 * @param name
+	 *            name of the image without '.png'.
+	 * @return Image
+	 * @throws SlickException
+	 *             if not '.png'
+	 */
 	public Image loadImage(String name) throws SlickException {
 		return new Image(spriteFolderPath + name + ".png", false, Image.FILTER_NEAREST);
 	}

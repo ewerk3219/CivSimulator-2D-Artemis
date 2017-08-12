@@ -14,7 +14,14 @@ public class WorldGenerator {
 	public static final int INTERPOLATION_LOOP_COUNT = 4;
 	public static final double POWER = 1.51;
 
-	@SuppressWarnings("unused")
+	/**
+	 * 
+	 * @param length
+	 *            length of Layer
+	 * @param width
+	 *            width of Layer
+	 * @return An auto generated Layer of the chosen size.
+	 */
 	public Layer generateWorldSpace(int length, int width) {
 		Layer world = new Layer(length, width);
 		world.testInitTiles();

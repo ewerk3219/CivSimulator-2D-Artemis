@@ -25,19 +25,69 @@ import com.sim.subSystems.world.worldParser.TextFileWorldParser;
 
 public class WorldManager {
 
+	private String worldName;
+
 	private World world;
 	private Area area;
 
+	/**
+	 * Will initialize an empty world without an area.
+	 */
+	public WorldManager() {
+		WorldConfiguration config = new WorldConfigurationBuilder()
+				.with(new TestMindAI(), new Combat()).build();
+		world = new World(config);
+		worldName = "Unknown";
+	}
+
+	/**
+	 * Loads a saved world from the given path.
+	 */
 	public WorldManager(String path) {
 		this();
 		area = new Area();
 		area.addLayer(TextFileWorldParser.parseLayer(path));
 	}
 
-	public WorldManager() {
-		WorldConfiguration config = new WorldConfigurationBuilder()
-				.with(new TestMindAI(), new Combat()).build();
-		world = new World(config);
+	/**
+	 * 
+	 * Creates an empty or auto generated world of the given size (length and
+	 * width).
+	 * 
+	 * @param name
+	 *            Name of the World.
+	 * @param shouldAutoGenLayer
+	 *            True if the first layer is auto generated.
+	 * @param length
+	 *            Length of the first layer.
+	 * @param width
+	 *            width of the first layer.
+	 */
+	public WorldManager(String name, boolean shouldAutoGenLayer, int length,
+			int width) {
+		this();
+		worldName = name;
+		area = new Area();
+		if (shouldAutoGenLayer) {
+			area.addLayer(new WorldGenerator().generateWorldSpace(length, width));
+		} else {
+			area.addLayer(new Layer(length, width));
+		}
+	}
+
+	/**
+	 * If the area has not been initialized yet (zero argument constructor) use
+	 * this first before doing anything.
+	 * 
+	 * @throws IllegalStateException
+	 *             If method called when area has already been initialized.
+	 */
+	public void initArea() {
+		if (area != null) {
+			throw new IllegalStateException(
+					"Only use this method if 'area' has not been initialized yet.");
+		}
+		area = new Area();
 	}
 
 	public void process(float delta) {
@@ -45,6 +95,9 @@ public class WorldManager {
 		this.world.process();
 	}
 
+	/**
+	 * Currently a test method, not fully implemented yet.
+	 */
 	public void addEntity(int x, int y) {
 		Entity e = world.createEntity();
 		EntityEdit ed = world.edit(e.getId());
@@ -77,8 +130,8 @@ public class WorldManager {
 		if (Simulator.simManager.map.resourceLoader.getSprites() == null) {
 			System.out.println("sprites object is null");
 		}
-		if (Simulator.simManager.map.resourceLoader.getSprites()
-				.getSprite(spriteX, spriteY) == null) {
+		if (Simulator.simManager.map.resourceLoader.getSprites().getSprite(spriteX,
+				spriteY) == null) {
 			System.out.println("Image is null");
 		}
 	}
@@ -135,8 +188,8 @@ public class WorldManager {
 		area.moveEntityTo(e, x, y);
 	}
 
-	public void renderBlock(Graphics g, int standardUnit, int startX,
-			int startY, int endX, int endY) {
+	public void renderBlock(Graphics g, int standardUnit, int startX, int startY,
+			int endX, int endY) {
 		area.renderBlock(g, standardUnit, startX, startY, endX, endY);
 	}
 
@@ -192,5 +245,12 @@ public class WorldManager {
 				- Simulator.simManager.simState.getRenderManager().getRenderY())
 				/ Simulator.simManager.simState.getRenderManager().standardUnit;
 		return gridY;
+	}
+
+	/**
+	 * Returns the String name of the world.
+	 */
+	public String getWorldName() {
+		return this.worldName;
 	}
 }

@@ -8,31 +8,32 @@ import org.newdawn.slick.Graphics;
 import com.artemis.Entity;
 import com.sim.Direction;
 import com.sim.Simulator;
+import com.sim.subSystems.renderManager.RenderManager;
 
 public class Area {
 
 	private ArrayList<Layer> layerContainer;
 	private int currentLayer; // Defines what layer will be rendered
 
-	/*
+	/**
 	 * Constructs an empty area. CANNOT BE USED UNTIL LAYERS ARE ADDED
 	 */
 	public Area() {
 		// TODO make this constructor immediately ask for parameters so it can
-		// Initialize with atleast one layer
+		// Initialize with at least one layer
 		this.layerContainer = new ArrayList<Layer>();
 		currentLayer = 0;
 	}
 
 	/**
-	 * Renders the layer grid based on the current layer this Area is focused
-	 * on.
+	 * Initializes the area with the given layer
 	 * 
-	 * @deprecated This is old and shouldn't be used anymore. Optimized version
-	 *             is renderBlock().
+	 * @param layer
+	 *            The initial layer.
 	 */
-	public void render(Graphics g, int standardUnit) {
-		this.layerContainer.get(currentLayer).renderLayer(g, standardUnit);
+	public Area(Layer layer) {
+		this();
+		layerContainer.add(layer);
 	}
 
 	/**
@@ -52,13 +53,13 @@ public class Area {
 	 * @param endY
 	 *            bottom most y coordinate in view.
 	 */
-	public void renderBlock(Graphics g, int standardUnit, int startX,
+	public void renderBlock(Graphics g, RenderManager rm, int standardUnit, int startX,
 			int startY, int endX, int endY) {
-		this.layerContainer.get(currentLayer).renderBlock(g, standardUnit,
-				startX, startY, endX, endY);
+		this.layerContainer.get(currentLayer).renderBlock(g, rm, standardUnit, startX,
+				startY, endX, endY);
 	}
 
-	/*
+	/**
 	 * Pre: layer must be one less than the total number of layers AND be
 	 * greater than or equal to 0 (throws an IllegalArgumentException
 	 * otherwise).
@@ -72,7 +73,7 @@ public class Area {
 		this.currentLayer = layer;
 	}
 
-	/*
+	/**
 	 * Adds a layer with a specified width and height. Requires a SpriteSheet
 	 * which will be used as the terrain textures.
 	 */
@@ -80,14 +81,14 @@ public class Area {
 		this.layerContainer.add(new Layer(width, height));
 	}
 
-	/*
+	/**
 	 * Adds the layer from the parameters to the existing Area.
 	 */
 	public void addLayer(Layer layer) {
 		this.layerContainer.add(layer);
 	}
 
-	/*
+	/**
 	 * Returns a pointer to the ArrayList<Layer> which holds each individual
 	 * Layer.
 	 */
@@ -95,34 +96,34 @@ public class Area {
 		return this.layerContainer;
 	}
 
-	/*
+	/**
 	 * Returns the total number of layers contained within this Area.
 	 */
 	public int getTotalLayers() {
 		return this.layerContainer.size();
 	}
 
-	/*
+	/**
 	 * Returns whether or not Area has no layers.
 	 */
 	public boolean isEmpty() {
 		return getTotalLayers() == 0;
 	}
 
-	/*
+	/**
 	 * Initializes each layer contained within this Area to its default state.
 	 */
 	public void testInitAllLayers() {
 		for (Layer layer : layerContainer) {
-			layer.testInitTiles();
+			layer.defaultInitNullTiles();
 		}
 	}
 
-	private Layer getCurrentLayer() {
+	public Layer getCurrentLayer() {
 		return this.getLayerContainer().get(currentLayer);
 	}
 
-	/*
+	/**
 	 * Returns a list of tile shapes who's tile was solid. Used for rendering in
 	 * debug.
 	 */
@@ -142,6 +143,10 @@ public class Area {
 
 	public void setCurrentLayer(int layer) {
 		this.currentLayer = layer;
+	}
+
+	public int getCurrentLayerIndex() {
+		return this.currentLayer;
 	}
 
 	public Tile getTile(int x, int y) {
@@ -178,5 +183,11 @@ public class Area {
 
 	public void moveEntityTo(Entity e, int x, int y) {
 		this.getCurrentLayer().moveEntityTo(e, x, y);
+	}
+
+	public void prepForDeletion() {
+		for (Layer layer : layerContainer) {
+			layer.deleteAllEntities();
+		}
 	}
 }

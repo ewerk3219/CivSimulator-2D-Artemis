@@ -130,4 +130,9 @@ public class Tile {
 	public Entity getEnvironmentalEntity() {
 		return this.environmentalEntity;
 	}
+
+	public void deleteAllEntities() {
+		this.occupantEntity.deleteFromWorld();
+		this.environmentalEntity.deleteFromWorld();
+	}
 }

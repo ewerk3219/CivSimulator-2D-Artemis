@@ -24,7 +24,7 @@ public class WorldGenerator {
 	 */
 	public Layer generateWorldSpace(int length, int width) {
 		Layer world = new Layer(length, width);
-		world.testInitTiles();
+		world.defaultInitNullTiles();
 		for (int x = 0; x < world.getLayerGrid().length; x++) {
 			for (int y = 0; y < world.getLayerGrid()[0].length; y++) {
 				Tile tile = world.getTile(x, y);

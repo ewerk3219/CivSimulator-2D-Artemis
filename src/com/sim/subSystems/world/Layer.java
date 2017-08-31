@@ -13,13 +13,13 @@ import com.artemis.Entity;
 import com.sim.Direction;
 import com.sim.subSystems.entity.components.Visible;
 import com.sim.subSystems.entity.util.PointTranslator;
+import com.sim.subSystems.renderManager.RenderManager;
 
 public class Layer {
 
 	public static final Direction[] ALL_DIRECTIONS = { Direction.NORTH,
-			Direction.NORTHEAST, Direction.EAST, Direction.SOUTHEAST,
-			Direction.SOUTH, Direction.SOUTHWEST, Direction.WEST,
-			Direction.NORTHWEST };
+			Direction.NORTHEAST, Direction.EAST, Direction.SOUTHEAST, Direction.SOUTH,
+			Direction.SOUTHWEST, Direction.WEST, Direction.NORTHWEST };
 
 	private Tile[][] grid;
 
@@ -27,17 +27,15 @@ public class Layer {
 		this.grid = new Tile[length][width];
 	}
 
-	/*
-	 * Initializes this layer to the first sprite in the SpriteSheet and makes
-	 * everything non-solid.
+	/**
+	 * Initializes each NULL tile in this grid to a basic non-solid
 	 */
-	public void testInitTiles() {
+	public void defaultInitNullTiles() {
 		for (int x = 0; x < grid.length; x++) {
 			for (int y = 0; y < grid[0].length; y++) {
-				// grid[x][y] = new Tile(x * standardUnit, y * standardUnit,
-				// false,
-				// Color.gray);
-				grid[x][y] = new Tile(x, y, false, Color.magenta);
+				if (grid[x][y] == null) {
+					grid[x][y] = new Tile(x, y, false, Color.magenta);
+				}
 			}
 		}
 	}
@@ -46,12 +44,12 @@ public class Layer {
 	 * Renders this Layer with displayX and displayY being the origin. (i.e. the
 	 * top left corner)
 	 */
-	public void renderLayer(Graphics g, int standardUnit) {
+	public void renderLayer(Graphics g, RenderManager rm, int standardUnit) {
 		for (int gridX = 0; gridX < grid.length; gridX++) {
 			for (int gridY = 0; gridY < grid[0].length; gridY++) {
 				Tile tile = grid[gridX][gridY];
-				int x = WorldManager.gridXToRenderCoordX(gridX);
-				int y = WorldManager.gridYToRenderCoordY(gridY);
+				int x = rm.gridXToRenderCoordX(gridX);
+				int y = rm.gridYToRenderCoordY(gridY);
 				if (g.getWorldClip().contains(x, y)) {
 					g.setColor(tile.getTerrainColor());
 					g.fillRect(x, y, standardUnit, standardUnit);
@@ -69,19 +67,20 @@ public class Layer {
 	/**
 	 * Renders everything within the (startX, startY) to (endX, endY) selection.
 	 */
-	public void renderBlock(Graphics g, int standardUnit, int startX,
+	public void renderBlock(Graphics g, RenderManager rm, int standardUnit, int startX,
 			int startY, int endX, int endY) {
 		for (int x = startX; x < endX; x++) {
 			for (int y = startY; y < endY; y++) {
 				Tile tile = grid[x][y];
-				int renderX = WorldManager.gridXToRenderCoordX(x);
-				int renderY = WorldManager.gridYToRenderCoordY(y);
+				int renderX = rm.gridXToRenderCoordX(x);
+				int renderY = rm.gridYToRenderCoordY(y);
 				g.setColor(tile.getTerrainColor());
 				g.fillRect(renderX, renderY, standardUnit, standardUnit);
 				Image entityAppearance = tile.getOccupantEntityAppearance();
 				if (entityAppearance != null) {
-					g.drawImage(entityAppearance.getScaledCopy(standardUnit,
-							standardUnit), renderX, renderX);
+					g.drawImage(
+							entityAppearance.getScaledCopy(standardUnit, standardUnit),
+							renderX, renderX);
 				}
 			}
 		}
@@ -194,8 +193,7 @@ public class Layer {
 	 * must be within the bounds of the grid, returns null otherwise.
 	 */
 	public Tile getTile(int x, int y) {
-		if (x >= this.grid.length || x < 0 || y >= this.grid[0].length
-				|| y < 0) {
+		if (x >= this.grid.length || x < 0 || y >= this.grid[0].length || y < 0) {
 			return null;
 		} else
 			return grid[x][y];
@@ -257,5 +255,26 @@ public class Layer {
 			}
 		}
 		return min;
+	}
+
+	/**
+	 * Deletes all entities in this layer
+	 */
+	public void deleteAllEntities() {
+		for (int x = 0; x < grid.length; x++) {
+			for (int y = 0; y < grid[0].length; y++) {
+				grid[x][y].deleteAllEntities();
+			}
+		}
+	}
+
+	/**
+	 * Sets this Layer's grid to the given tile grid.
+	 * 
+	 * @param newGrid
+	 *            The new grid for this layer.
+	 */
+	public void setGrid(Tile[][] newGrid) {
+		this.grid = newGrid;
 	}
 }

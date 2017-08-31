@@ -1,8 +1,10 @@
 package com.sim.simStates;
 
 import org.lwjgl.Sys;
+import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -19,19 +21,18 @@ public class SimulationState extends BasicGameState {
 	private long currentTic;
 
 	private WorldManager worldManager;
-	private RenderManager renderManager;
+	private RenderManager rm;
 
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
 		System.out.println("Initialization...");
 		System.out.println();
-		renderManager = new RenderManager(container, container.getGraphics(), game,
-				this);
-		renderManager.resetWorldClip(container);
 		// Artemis setup
 		initWorldManager();
 		initSimMap();
+		rm = new RenderManager(container, container.getGraphics(), game,
+				worldManager);
 		// initEntityTest();
 		// -------
 		System.out.println("Initialization complete");
@@ -55,7 +56,7 @@ public class SimulationState extends BasicGameState {
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta)
 			throws SlickException {
-		renderManager.updateDeltasAndCheckKeys(worldManager);
+		checkKeys(worldManager, container, game);
 		worldManager.process(delta);
 		updateSimTimingAndSleep(delta);
 	}
@@ -63,7 +64,7 @@ public class SimulationState extends BasicGameState {
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
-		this.renderManager.render();
+		this.rm.render();
 	}
 
 	private void updateSimTimingAndSleep(int delta) {
@@ -77,6 +78,61 @@ public class SimulationState extends BasicGameState {
 			}
 		}
 		this.currentTic++;
+	}
+
+	private void checkKeys(WorldManager worldManager, GameContainer gc,
+			StateBasedGame sbg) {
+		if (gc.getInput().isKeyPressed(Keyboard.KEY_1)) {
+			sbg.enterState(1);
+		}
+		if (gc.getInput().isKeyPressed(Keyboard.KEY_2)) {
+			sbg.enterState(2);
+		}
+		if (gc.getInput().isKeyPressed(Keyboard.KEY_3)) {
+			sbg.enterState(3);
+		}
+		if (gc.getInput().isKeyDown(Keyboard.KEY_EQUALS)) {
+			rm.zoomIn();
+		}
+		if (gc.getInput().isKeyDown(Keyboard.KEY_MINUS)) {
+			rm.zoomOut();
+		}
+		if (gc.getInput().isKeyDown(Keyboard.KEY_UP)) {
+			rm.goUp();
+		}
+		if (gc.getInput().isKeyDown(Keyboard.KEY_DOWN)) {
+			rm.goDown();
+		}
+		if (gc.getInput().isKeyDown(Keyboard.KEY_LEFT)) {
+			rm.goLeft();
+		}
+		if (gc.getInput().isKeyDown(Keyboard.KEY_RIGHT)) {
+			rm.goRight();
+		}
+		if (gc.getInput().isKeyPressed(Keyboard.KEY_BACK)) {
+			rm.resetZoom();
+		}
+		if (gc.getInput().isKeyPressed(Keyboard.KEY_9)) {
+			rm.increaseCameraSpeed();
+		}
+		if (gc.getInput().isKeyPressed(Keyboard.KEY_8)) {
+			rm.decreaseCameraSpeed();
+		}
+		if (gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
+			int mouseX = gc.getInput().getMouseX();
+			int mouseY = gc.getInput().getMouseY();
+			int gridX = rm.renderXToGridX(mouseX);
+			int gridY = rm.renderYToGridY(mouseY);
+			System.out.println(
+					"Mouse Point in grid Coords   : (" + gridX + ", " + gridY + ")");
+			System.out.println(
+					"Mouse Point in render Coords : (" + mouseX + ", " + mouseY + ")");
+
+		}
+		if (gc.getInput().isKeyPressed(Keyboard.KEY_M)) {
+			System.out
+					.println("Test Mind AI set to: " + worldManager.toggleMindOnOff());
+		}
 	}
 
 	public synchronized long getCurrentTic() {
@@ -93,7 +149,7 @@ public class SimulationState extends BasicGameState {
 	}
 
 	public RenderManager getRenderManager() {
-		return this.renderManager;
+		return this.rm;
 	}
 
 	public long getStartTime() {

@@ -20,6 +20,7 @@ import com.sim.subSystems.entity.components.TestMind;
 import com.sim.subSystems.entity.components.Visible;
 import com.sim.subSystems.entity.entitySystems.Combat;
 import com.sim.subSystems.entity.entitySystems.TestMindAI;
+import com.sim.subSystems.renderManager.RenderManager;
 import com.sim.subSystems.world.generators.WorldGenerator;
 import com.sim.subSystems.world.worldParser.TextFileWorldParser;
 
@@ -144,6 +145,22 @@ public class WorldManager {
 		return this.world.getSystem(TestMindAI.class).toggleMindOnOff();
 	}
 
+	public Area getArea() {
+		return this.area;
+	}
+
+	/**
+	 * Creates a new world with the given width and height. Warning! This will
+	 * overwrite the current world and unsaved data will be lost.
+	 */
+	public void createNewWorld(int width, int height) {
+		if (this.area != null) {
+			area.prepForDeletion();
+		}
+		area = new Area(new Layer(width, height));
+		area.testInitAllLayers();
+	}
+
 	public void generateNewLayer(int size) {
 		this.area.addLayer(new WorldGenerator().generateWorldSpace(size, size));
 	}
@@ -188,63 +205,9 @@ public class WorldManager {
 		area.moveEntityTo(e, x, y);
 	}
 
-	public void renderBlock(Graphics g, int standardUnit, int startX, int startY,
-			int endX, int endY) {
-		area.renderBlock(g, standardUnit, startX, startY, endX, endY);
-	}
-
-	// --------------- Statics --------------- \\
-
-	/**
-	 * Translates grid-X coordinate to renderCoordinate-X for tile grid only.
-	 * 
-	 * @param gridX
-	 *            x-axis coordinate value.
-	 */
-	public static int gridXToRenderCoordX(int gridX) {
-		int renderX = gridX
-				* Simulator.simManager.simState.getRenderManager().standardUnit
-				+ Simulator.simManager.simState.getRenderManager().getRenderX();
-		return renderX;
-	}
-
-	/**
-	 * Translates grid-Y coordinate to renderCoordinate-Y for tile grid only.
-	 * 
-	 * @param gridY
-	 *            y-axis coordinate value.
-	 */
-	public static int gridYToRenderCoordY(int gridY) {
-		int renderY = gridY
-				* Simulator.simManager.simState.getRenderManager().standardUnit
-				+ Simulator.simManager.simState.getRenderManager().getRenderY();
-		return renderY;
-	}
-
-	/**
-	 * Translates render-X coordinate to grid-X coordinate for tile grid only.
-	 * 
-	 * @param renderX
-	 *            x-axis coordinate value for rendering.
-	 */
-	public static int renderXToGridX(int renderX) {
-		int gridX = (renderX
-				- Simulator.simManager.simState.getRenderManager().getRenderX())
-				/ Simulator.simManager.simState.getRenderManager().standardUnit;
-		return gridX;
-	}
-
-	/**
-	 * Translates render-Y coordinate to grid-Y coordinate for tile grid only.
-	 * 
-	 * @param renderY
-	 *            y-axis coordinate value for rendering.
-	 */
-	public static int renderYToGridY(int renderY) {
-		int gridY = (renderY
-				- Simulator.simManager.simState.getRenderManager().getRenderY())
-				/ Simulator.simManager.simState.getRenderManager().standardUnit;
-		return gridY;
+	public void renderBlock(Graphics g, RenderManager rm, int standardUnit, int startX,
+			int startY, int endX, int endY) {
+		area.renderBlock(g, rm, standardUnit, startX, startY, endX, endY);
 	}
 
 	/**

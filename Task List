@@ -4,3 +4,40 @@ Task List:
 			- Must allow for map building and saving.
 			- Add a way to select a previously saved map.
 			- Tools tools tools!
+			
+			LayerSizeEditor:
+				- Implement drag-able pins along the four corners of the map that allow expansion and contraction of the map.
+					- Can only be used in size edit mode and only rendered then.
+					- Create separate class that allows this mode.
+						- Class should not determine when itself should be rendered, leave that to the MapMakerGUI class.
+						- Needs:
+							1. Class should have the four circle coordinates for drag-ables
+							2. A get for a list of lines to draw, lines representing the perimeter of the new layer array.
+							3. Should know when a circle is being dragged so as do not randomly delete parts of the current
+							layer.
+							4. Should hold a list of old layer arrays to allow undo operations, size of this list
+							(amount of times you can undo) should be variable.
+							5. When the list of old layer arrays hits its limit, the oldest array should be prepared for
+							deletion for ONLY tiles that are no longer in the current layer array for its given layer.
+								- This should take into account the current layer may be the wrong one, so having a private
+								data structure that hold the number	ID for what layer it belongs to in the area may be a good idea.
+								Keep in mind that layers MAY BE DELETED which would alter these IDs.
+									- CANNOT JUST COMPARE ARRAYS TO FIND THE RIGHT ONE when looking to prep for deletion
+									since the arrays in the Area class won't be the same ones held in the old layer array linked list.
+									- If a layer is deleted altogether, then any previous undo versions of the layer are to
+									be deleted in the undo list since it isn't this classes job to remember complete
+									deletion events. All other layer numbers in list are to be altered.
+							6. When a new array is confirmed, the contents of the old array should be loaded into a fresh
+							new one, any new tiles added should be given default initialization.
+			
+			Current situation:
+				- Need to implement saving system for maps.
+				- Need to implement loading gui and system for saved maps.
+				- Need to implement basic new map settings.
+				
+			Other things that need doing:
+				- Make the renderManager class very specific for only rendering tile maps, it should do NOTHING else.
+					- This also means that the interface GUI should not be referenced in the RenderManager class. 
+					The GUI interfaces should only be used by the simStates.
+				- RenderManager class method "displayInformation" needs to be generalized or moved to the GUI interface to be generalized there.
+				- RenderManager class method "checkKeys" needs to be removed and left in either a general Input class or moved to individual simStates

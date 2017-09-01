@@ -45,7 +45,7 @@ public class MapMakerState extends BasicGameState {
 	private boolean upperLeftDragged, upperRightDragged, lowerLeftDragged,
 			lowerRightDragged;
 
-	public static final int PIN_RADIUS = 7;
+	public static final int PIN_RADIUS = 12;
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
@@ -130,6 +130,18 @@ public class MapMakerState extends BasicGameState {
 			rm.decreaseCameraSpeed();
 		}
 
+		layerSizeEditorKeyCheck(gc);
+	}
+
+	private void layerSizeEditorKeyCheck(GameContainer gc) {
+
+		// Check for undo function
+		if (gc.getInput().isKeyDown(Keyboard.KEY_LCONTROL)
+				&& gc.getInput().isKeyPressed(Keyboard.KEY_Z)) {
+			layerSizeEditor.undo(wm.getArea().getCurrentLayerIndex(),
+					wm.getArea().getCurrentLayer());
+		}
+
 		// Layer Editor Pin Dragging
 		if (upperLeftDragged || upperRightDragged || lowerLeftDragged
 				|| lowerRightDragged) {
@@ -169,16 +181,13 @@ public class MapMakerState extends BasicGameState {
 			if (upperLeft.contains(gc.getInput().getMouseX(),
 					gc.getInput().getMouseY())) {
 				upperLeftDragged = true;
-			}
-			if (upperRight.contains(gc.getInput().getMouseX(),
+			} else if (upperRight.contains(gc.getInput().getMouseX(),
 					gc.getInput().getMouseY())) {
 				upperRightDragged = true;
-			}
-			if (lowerLeft.contains(gc.getInput().getMouseX(),
+			} else if (lowerLeft.contains(gc.getInput().getMouseX(),
 					gc.getInput().getMouseY())) {
 				lowerLeftDragged = true;
-			}
-			if (lowerRight.contains(gc.getInput().getMouseX(),
+			} else if (lowerRight.contains(gc.getInput().getMouseX(),
 					gc.getInput().getMouseY())) {
 				lowerRightDragged = true;
 			}
@@ -200,18 +209,27 @@ public class MapMakerState extends BasicGameState {
 		Point[] corners = layerSizeEditor.gridSizePins();
 		int renderXPin = rm.gridXToRenderCoordX(corners[0].x);
 		int renderYPin = rm.gridYToRenderCoordY(corners[0].y);
+		// System.out.println("(" + renderXPin + ", " + renderYPin + ")");
+
 		upperLeft.setCenterX(renderXPin);
 		upperLeft.setCenterY(renderYPin);
 		renderXPin = rm.gridXToRenderCoordX(corners[1].x);
 		renderYPin = rm.gridYToRenderCoordY(corners[1].y);
+		// System.out.println("(" + renderXPin + ", " + renderYPin + ")");
+
 		upperRight.setCenterX(renderXPin);
 		upperRight.setCenterY(renderYPin);
 		renderXPin = rm.gridXToRenderCoordX(corners[2].x);
 		renderYPin = rm.gridYToRenderCoordY(corners[2].y);
+		// System.out.println("(" + renderXPin + ", " + renderYPin + ")");
+
 		lowerLeft.setCenterX(renderXPin);
 		lowerLeft.setCenterY(renderYPin);
 		renderXPin = rm.gridXToRenderCoordX(corners[3].x);
 		renderYPin = rm.gridYToRenderCoordY(corners[3].y);
+		System.out.println("(" + corners[3].x + ", " + corners[3].y + ")");
+		// System.out.println("(" + renderXPin + ", " + renderYPin + ")");
+
 		lowerRight.setCenterX(renderXPin);
 		lowerRight.setCenterY(renderYPin);
 	}

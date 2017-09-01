@@ -151,6 +151,7 @@ public class MapMakerGUI implements GUI, ComponentListener {
 		submitSize = new MouseOverArea(gc, submitImage,
 				gc.getWidth() / 2 - submitImage.getWidth() / 2,
 				gc.getHeight() - browserYShift / 2, this);
+
 	}
 
 	public void renderButtons() {

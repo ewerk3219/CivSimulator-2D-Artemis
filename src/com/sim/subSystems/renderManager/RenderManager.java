@@ -24,8 +24,7 @@ public class RenderManager {
 	private final Graphics g;
 	private final StateBasedGame sbg;
 	private final WorldManager wm;
-	// private final SimulationState simState;
-
+	
 	private int renderX;
 	private int renderY;
 

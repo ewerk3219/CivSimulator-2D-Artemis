@@ -17,7 +17,7 @@ public class LayerSizeEditor {
 	private Stack<PreviousLayer> undoLayerStack;
 
 	/** Maximum number of actions that have been saved and can be undone */
-	public static final int MAX_UNDO = 10;
+	public static final int MAX_UNDO = 15;
 
 	/**
 	 * To keep tract of old layers and where they lie within the current Area
@@ -78,13 +78,11 @@ public class LayerSizeEditor {
 	public void updateUpperLeft(int x, int y) {
 		x = rm.renderXToGridX(x);
 		y = rm.renderYToGridY(y);
-		x = checkX(x);
-		y = checkY(y);
 		// Check overlapping
-		if (x > lowerRight.x) {
+		if (x >= lowerRight.x) {
 			x = lowerRight.x - 1;
 		}
-		if (y > lowerRight.y) {
+		if (y >= lowerRight.y) {
 			y = lowerRight.y - 1;
 		}
 		this.upperLeft.x = x;
@@ -101,13 +99,11 @@ public class LayerSizeEditor {
 	public void updateUpperRight(int x, int y) {
 		x = rm.renderXToGridX(x);
 		y = rm.renderYToGridY(y);
-		x = checkX(x);
-		y = checkY(y);
 		// Check overlapping
-		if (x < upperLeft.x) {
+		if (x <= upperLeft.x) {
 			x = upperLeft.x + 1;
 		}
-		if (y > lowerRight.y) {
+		if (y >= lowerRight.y) {
 			y = lowerRight.y - 1;
 		}
 		this.lowerRight.x = x;
@@ -124,13 +120,11 @@ public class LayerSizeEditor {
 	public void updateLowerLeft(int x, int y) {
 		x = rm.renderXToGridX(x);
 		y = rm.renderYToGridY(y);
-		x = checkX(x);
-		y = checkY(y);
 		// Check overlapping
-		if (x > lowerRight.x) {
+		if (x >= lowerRight.x) {
 			x = lowerRight.x - 1;
 		}
-		if (y < upperLeft.y) {
+		if (y <= upperLeft.y) {
 			y = upperLeft.y + 1;
 		}
 		this.upperLeft.x = x;
@@ -147,41 +141,15 @@ public class LayerSizeEditor {
 	public void updateLowerRight(int x, int y) {
 		x = rm.renderXToGridX(x);
 		y = rm.renderYToGridY(y);
-		x = checkX(x);
-		y = checkY(y);
 		// Check overlapping
-		if (x < upperLeft.x) {
+		if (x <= upperLeft.x) {
 			x = upperLeft.x + 1;
 		}
-		if (y < upperLeft.y) {
-			x = upperLeft.y + 1;
+		if (y <= upperLeft.y) {
+			y = upperLeft.y + 1;
 		}
 		this.lowerRight.x = x;
 		this.lowerRight.y = y;
-	}
-
-	/*
-	 * To prevent overlying pins along y coordinates
-	 */
-	private int checkY(int y) {
-		if (y == upperLeft.y) {
-			return y + 1;
-		} else if (y == lowerRight.y) {
-			return y - 1;
-		}
-		return y;
-	}
-
-	/*
-	 * To prevent overlying pins along x coordinates
-	 */
-	private int checkX(int x) {
-		if (x == upperLeft.x) {
-			return x + 1;
-		} else if (x == lowerRight.x) {
-			return x - 1;
-		}
-		return x;
 	}
 
 	/**
@@ -249,13 +217,17 @@ public class LayerSizeEditor {
 
 		for (int x = startX; startX < endX; startX++) {
 			for (int y = startY; startY < endY; startY++) {
-				newGrid[x][y] = pl.oldGrid[x][y];
+				newGrid[x - upperLeft.x][y - upperLeft.y] = pl.oldGrid[x][y];
 			}
 		}
 
 		// Set layer to new grid and defaults new tiles
 		currentLayer.setGrid(newGrid);
 		currentLayer.defaultInitNullTiles();
+
+		if (upperLeft.x != 0 || upperLeft.y != 0) {
+			resetCornerPoints(currentLayer);
+		}
 	}
 
 	private void deleteOldestUndo() {
